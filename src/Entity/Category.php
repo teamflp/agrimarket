@@ -6,6 +6,7 @@ use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 class Category
@@ -13,18 +14,21 @@ class Category
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['category:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['category:read', 'category:write'])]
     private ?string $name = null;
 
     /**
      * @var Collection<int, Product>
      *
-     * Relation bidirectionnelle : une catégorie peut avoir plusieurs produits
+ * @Relation bidirectionnelle : une catégorie peut avoir plusieurs produits
      */
 
     #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'category')]
+    // Ici, on n'ajoute pas forcément de groupe ici pour éviter de renvoyer des boucles de sérialisation
     private Collection $products;
 
     public function __construct()
