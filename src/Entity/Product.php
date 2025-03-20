@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product
@@ -14,29 +15,37 @@ class Product
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['product:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['product:read', 'product:write'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['product:read', 'product:write'])]
     private ?string $slug = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['product:read', 'product:write'])]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 0)]
+    #[Groups(['product:read', 'product:write'])]
     private ?string $price = null;
 
     #[ORM\Column]
+    #[Groups(['product:read', 'product:write'])]
     private ?int $quantity = null;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
+    #[Groups(['product:read', 'product:write'])]
     private ?Category $category = null;
 
     // Relation avec l’agriculteur (User) qui possède le produit
     #[ORM\ManyToOne(inversedBy: 'products')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['product:read', 'product:write'])]
     private ?User $farmer = null;
 
     /**
@@ -52,6 +61,7 @@ class Product
     private Collection $ratings;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['product:read', 'product:write'])]
     private ?string $illustration = null;
 
     public function __construct()
