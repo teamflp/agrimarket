@@ -2,11 +2,26 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\OrderItemRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OrderItemRepository::class)]
+#[ApiResource(
+    operations: [
+        new GetCollection(),    // GET /api/orderitem
+        new Get(),              // GET /api/orderitem/{id}
+        new POST(),             // POST /api/orderitem
+        new Put(),              // PUT /api/orderitem/{id}
+        new Delete(),           // DELETE /api/categories/{id}
+    ]
+)]
 class OrderItem
 {
     #[ORM\Id]
