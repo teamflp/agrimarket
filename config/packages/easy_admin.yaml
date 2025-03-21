@@ -1,0 +1,9 @@
+ # config/packages/easy_admin.yaml
+easy_admin:
+ design:
+ entities:
+  # List the entity class name you want to manage
+  # use fully-qualified class name
+  - App\Entity\Category  # Remplacer par le nom de tes entités
+  - App\Entity\Subscription
+  - App\Entity\Rating  # Ajoute d'autres entités ici

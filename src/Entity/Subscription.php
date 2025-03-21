@@ -2,10 +2,25 @@
 
 namespace App\Entity;
 
-use App\Repository\SubscriptionRepository;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Delete;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use App\Repository\SubscriptionRepository;
 
 #[ORM\Entity(repositoryClass: SubscriptionRepository::class)]
+#[ApiResource(
+    operations:[
+        new GetCollection(),
+        new Get(),
+        new POST(),
+        new Put(),
+        new Delete(),
+    ]
+)]
 class Subscription
 {
     #[ORM\Id]

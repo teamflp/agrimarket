@@ -2,11 +2,26 @@
 
 namespace App\Entity;
 
-use App\Repository\RatingRepository;
+use ApiPlatform\Metadata\Get;
 use Doctrine\DBAL\Types\Types;
+use ApiPlatform\Metadata\Delete;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\RatingRepository;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 
 #[ORM\Entity(repositoryClass: RatingRepository::class)]
+#[ApiResource(
+    operations:[
+        new GetCollection(),
+        new Get(),
+        new POST(),
+        new Put(),
+        new Delete(),
+    ]
+)]
 class Rating
 {
     #[ORM\Id]
