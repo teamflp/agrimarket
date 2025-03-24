@@ -15,11 +15,11 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: OrderItemRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection(),    // GET /api/orderitem
-        new Get(),              // GET /api/orderitem/{id}
-        new POST(),             // POST /api/orderitem
-        new Put(),              // PUT /api/orderitem/{id}
-        new Delete(),           // DELETE /api/categories/{id}
+        new GetCollection(),    // GET /api/order-items
+        new Get(),              // GET /api/order-items/{id}
+        new POST(),             // POST /api/order-items
+        new Put(),              // PUT /api/order-items/{id}
+        new Delete(),           // DELETE /api/order-items/{id}
     ]
 )]
 class OrderItem

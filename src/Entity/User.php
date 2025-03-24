@@ -65,12 +65,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Rating::class, mappedBy: 'buyer')]
     private Collection $ratings;
 
+    /**
+     * @var Collection<int, RefundRequest>
+     */
+    #[ORM\OneToMany(targetEntity: RefundRequest::class, mappedBy: 'user')]
+    private Collection $refundRequests;
+
+    /**
+     * @var Collection<int, Notification>
+     */
+    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'user')]
+    private Collection $notifications;
+
+    /**
+     * @var Collection<int, ReviewReport>
+     */
+    #[ORM\OneToMany(targetEntity: ReviewReport::class, mappedBy: 'user')]
+    private Collection $reviewReports;
+
     public function __construct()
     {
         $this->subscriptions = new ArrayCollection();
         $this->products = new ArrayCollection();
         $this->orders = new ArrayCollection();
         $this->ratings = new ArrayCollection();
+        $this->refundRequests = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
+        $this->reviewReports = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -274,6 +295,96 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($rating->getBuyer() === $this) {
                 $rating->setBuyer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RefundRequest>
+     */
+    public function getRefundRequests(): Collection
+    {
+        return $this->refundRequests;
+    }
+
+    public function addRefundRequest(RefundRequest $refundRequest): static
+    {
+        if (!$this->refundRequests->contains($refundRequest)) {
+            $this->refundRequests->add($refundRequest);
+            $refundRequest->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRefundRequest(RefundRequest $refundRequest): static
+    {
+        if ($this->refundRequests->removeElement($refundRequest)) {
+            // set the owning side to null (unless already changed)
+            if ($refundRequest->getUser() === $this) {
+                $refundRequest->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Notification>
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): static
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
+            $notification->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): static
+    {
+        if ($this->notifications->removeElement($notification)) {
+            // set the owning side to null (unless already changed)
+            if ($notification->getUser() === $this) {
+                $notification->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ReviewReport>
+     */
+    public function getReviewReports(): Collection
+    {
+        return $this->reviewReports;
+    }
+
+    public function addReviewReport(ReviewReport $reviewReport): static
+    {
+        if (!$this->reviewReports->contains($reviewReport)) {
+            $this->reviewReports->add($reviewReport);
+            $reviewReport->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReviewReport(ReviewReport $reviewReport): static
+    {
+        if ($this->reviewReports->removeElement($reviewReport)) {
+            // set the owning side to null (unless already changed)
+            if ($reviewReport->getUser() === $this) {
+                $reviewReport->setUser(null);
             }
         }
 

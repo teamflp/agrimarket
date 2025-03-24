@@ -2,11 +2,12 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\OrderItem;
+use App\Entity\ReviewReport;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
-use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
@@ -14,25 +15,26 @@ class OrderController extends AbstractCrudController
 {
     public static function getEntityFqcn(): String
     {
-        return OrderItem::class;
+        return ReviewReport::class;
     }
 
-    public function configureFields(string $orderItem): iterable
+    public function configureFields(string $reviewReport): iterable
     {
         return [
             IdField::new('id')->hideOnForm(),
-            AssociationField::new('Order', 'Order'),
-            AssociationField::new('Product', 'Produit'),
-            NumberField::new('value', 'quantite'),
-            NumberField::new('value', 'prix')
+            TextField::new('reason', 'raison'),
+            TextField::new('status', 'status'),
+            DateTimeField::new('date', 'date de creation'),
+            AssociationField::new('User', 'Utilisateur'),
+            AssociationField::new('Rating', 'Rating'),
         ];
     }
 
     public function configureCrud(Crud $crud): Crud
     {
     return $crud
-        ->setEntityLabelInSingular('OrderItem')
-        ->setEntityLabelInPlural('OrderItems')
+        ->setEntityLabelInSingular('ReviewReport')
+        ->setEntityLabelInPlural('ReviewReports')
         ->setSearchFields(['name'])
         ->setDefaultSort(['name' => 'ASC'])
     ;

@@ -2,49 +2,51 @@
 
 namespace App\Controller\Admin;
 
-use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
-use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
-use Symfony\Component\HttpFoundation\Response;
+use App\Entity\Product;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
-#[AdminDashboard(routePath: '/admin', routeName: 'admin')]
-class ProductController extends AbstractDashboardController
+class OrderController extends AbstractCrudController
 {
-    public function index(): Response
+    public static function getEntityFqcn(): String
     {
-        return parent::index();
-
-        // Option 1. You can make your dashboard redirect to some common page of your backend
-        //
-        // 1.1) If you have enabled the "pretty URLs" feature:
-        // return $this->redirectToRoute('admin_user_index');
-        //
-        // 1.2) Same example but using the "ugly URLs" that were used in previous EasyAdmin versions:
-        // $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
-        // return $this->redirect($adminUrlGenerator->setController(OneOfYourCrudController::class)->generateUrl());
-
-        // Option 2. You can make your dashboard redirect to different pages depending on the user
-        //
-        // if ('jane' === $this->getUser()->getUsername()) {
-        //     return $this->redirectToRoute('...');
-        // }
-
-        // Option 3. You can render some custom template to display a proper dashboard with widgets, etc.
-        // (tip: it's easier if your template extends from @EasyAdmin/page/content.html.twig)
-        //
-        // return $this->render('some/path/my-dashboard.html.twig');
+        return Product::class;
     }
 
-    public function configureDashboard(): Dashboard
+    public function configureFields(string $product): iterable
     {
-        return Dashboard::new()
-            ->setTitle('Agrimarket');
+        return [
+            IdField::new('id')->hideOnForm(),
+            TextField::new('name', 'nom'),
+            TextField::new('slug', 'slug'),
+            TextField::new('description', 'description'),
+            NumberField::new('value', 'prix'),
+            NumberField::new('value', 'quantite'),
+            AssociationField::new('Category', 'Categorie'),
+            AssociationField::new('User', 'Utilisateur'),
+        ];
     }
 
-    public function configureMenuItems(): iterable
+    public function configureCrud(Crud $crud): Crud
     {
-        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-        // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
+    return $crud
+        ->setEntityLabelInSingular('Product')
+        ->setEntityLabelInPlural('Products')
+        ->setSearchFields(['name'])
+        ->setDefaultSort(['name' => 'ASC'])
+    ;
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+    return $actions
+        ->add(Crud::PAGE_INDEX, 'detail')
+        ->add(Crud::PAGE_EDIT, 'detail')
+    ;
     }
 }

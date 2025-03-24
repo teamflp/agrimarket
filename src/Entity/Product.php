@@ -17,11 +17,11 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection(),    // GET /api/product
-        new Get(),              // GET /api/product/{id}
-        new POST(),             // POST /api/product
-        new Put(),              // PUT /api/product
-        new Delete(),           // DELETE /api/product/{id}
+        new GetCollection(),    // GET /api/products
+        new Get(),              // GET /api/products/{id}
+        new POST(),             // POST /api/products
+        new Put(),              // PUT /api/products
+        new Delete(),           // DELETE /api/products/{id}
     ]
 )]
 class Product
