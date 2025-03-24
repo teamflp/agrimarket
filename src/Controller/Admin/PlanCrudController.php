@@ -2,37 +2,42 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Subscription;
+use App\Entity\Plan;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
-class SubscriptionCrudController extends AbstractCrudController
+class PlanCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return Subscription::class;
+        return Plan::class;
     }
 
     
-    public function configureFields(string $subscription): iterable
+    public function configureFields(string $plan): iterable
     {
         return [
             IdField::new('id')->hideOnForm(),
-            TextField::new('plan','plan'),
-            DateTimeField::new('starDateAt', "Date d'inscription"),
-            DateTimeField::new('endDateAt', "date de fin d'inscription"),
+            TextField::new('name', 'nom'),
+            TextEditorField::new('description'),
+            NumberField::new('price','prix'),
+            NumberField::new('price','prix'),
+            NumberField::new('maxProducts','Produits maximum'),
+
+
         ];
     }
-    
+
     public function configureCrud(Crud $crud): Crud
     {
     return $crud
-        ->setEntityLabelInSingular('Subscription')
-        ->setEntityLabelInPlural('Subscriptions')
+        ->setEntityLabelInSingular('Plan')
+        ->setEntityLabelInPlural('Plans')
         ->setSearchFields(['name'])
         ->setDefaultSort(['name' => 'ASC'])
   ;
@@ -45,4 +50,5 @@ class SubscriptionCrudController extends AbstractCrudController
         ->add(Crud::PAGE_EDIT, 'detail')
   ;
   }
+    
 }

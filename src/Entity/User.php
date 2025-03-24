@@ -65,12 +65,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Rating::class, mappedBy: 'buyer')]
     private Collection $ratings;
 
+    /**
+     * @var Collection<int, Address>
+     */
+    #[ORM\ManyToMany(targetEntity: Address::class, inversedBy: 'users')]
+    private Collection $adresses;
+
+
+
     public function __construct()
     {
         $this->subscriptions = new ArrayCollection();
         $this->products = new ArrayCollection();
         $this->orders = new ArrayCollection();
         $this->ratings = new ArrayCollection();
+        $this->adresses = new ArrayCollection();
+        
     }
 
     public function getId(): ?int
@@ -276,6 +286,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $rating->setBuyer(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Adress>
+     */
+    public function getAdresses(): Collection
+    {
+        return $this->adresses;
+    }
+
+    public function addAdress(Address $adress): static
+    {
+        if (!$this->adresses->contains($adress)) {
+            $this->adresses->add($adress);
+        }
+
+        return $this;
+    }
+
+    public function removeAdress(Address $adress): static
+    {
+        $this->adresses->removeElement($adress);
 
         return $this;
     }

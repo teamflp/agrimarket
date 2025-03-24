@@ -2,7 +2,10 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Plan;
+use App\Entity\Coupon;
 use App\Entity\Rating;
+use App\Entity\Address;
 use App\Entity\Category;
 use App\Entity\Subscription;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,9 +50,12 @@ class DashboardController extends AbstractDashboardController
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-        yield MenuItem::linkToCrud('Catégories', 'fas fa-list', Category::class);
-        yield MenuItem::linkToCrud('ratings', 'fas fa-box', Rating::class);
-        yield MenuItem::linkToCrud('subcriptions', 'fas fa-box', Subscription::class);
+        yield MenuItem::linkToDashboard('Dashboard', 'home');
+        yield MenuItem::linkToCrud('Categories', 'list', Category::class);
+        yield MenuItem::linkToCrud('ratings', 'box', Rating::class);
+        yield MenuItem::linkToCrud('subcriptions', 'box', Subscription::class);
+        yield MenuItem::linkToCrud('addresses', 'box', Address::class);
+        yield MenuItem::linkToCrud('coupons', 'box', Coupon::class);
+        yield MenuItem::linkToCrud('plans', 'box', Plan::class);
     }
 }

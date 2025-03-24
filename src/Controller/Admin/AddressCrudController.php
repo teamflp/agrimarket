@@ -2,37 +2,44 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Subscription;
+use App\Entity\Address;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 
-class SubscriptionCrudController extends AbstractCrudController
+class AddressCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return Subscription::class;
+        return Address::class;
     }
 
     
-    public function configureFields(string $subscription): iterable
+    public function configureFields(string $pageName): iterable
     {
         return [
             IdField::new('id')->hideOnForm(),
-            TextField::new('plan','plan'),
-            DateTimeField::new('starDateAt', "Date d'inscription"),
-            DateTimeField::new('endDateAt', "date de fin d'inscription"),
+            TextField::new('street','rue'),
+            TextField::new('city','ville'),
+            TextField::new('zipCode','code Postal'),
+            TextField::new('label','label'),
+            NumberField::new('latitude','latitude'),
+            NumberField::new('longitude','longitude'),
+            AssociationField::new('Users', 'Utilisateur'),
+
+
+            
         ];
     }
-    
     public function configureCrud(Crud $crud): Crud
     {
     return $crud
-        ->setEntityLabelInSingular('Subscription')
-        ->setEntityLabelInPlural('Subscriptions')
+        ->setEntityLabelInSingular('Address')
+        ->setEntityLabelInPlural('Addresses')
         ->setSearchFields(['name'])
         ->setDefaultSort(['name' => 'ASC'])
   ;
@@ -45,4 +52,5 @@ class SubscriptionCrudController extends AbstractCrudController
         ->add(Crud::PAGE_EDIT, 'detail')
   ;
   }
+    
 }

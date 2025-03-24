@@ -27,20 +27,20 @@ class CategoryCrudController extends AbstractCrudController
     }
 
     public function configureCrud(Crud $crud): Crud
-  {
-  return $crud
-  ->setEntityLabelInSingular('Catégorie')
-  ->setEntityLabelInPlural('Catégories')
-  ->setSearchFields(['name'])
-  ->setDefaultSort(['name' => 'ASC'])
+    {
+    return $crud
+        ->setEntityLabelInSingular('Category')
+        ->setEntityLabelInPlural('Categories')
+        ->setSearchFields(['name'])
+        ->setDefaultSort(['name' => 'ASC'])
   ;
   }
 
-  public function configureActions(Actions $actions): Actions
-  {
-  return $actions
-  ->add(Crud::PAGE_INDEX, 'detail')
-  ->add(Crud::PAGE_EDIT, 'detail')
+    public function configureActions(Actions $actions): Actions
+    {
+    return $actions
+        ->add(Crud::PAGE_INDEX, 'detail')
+        ->add(Crud::PAGE_EDIT, 'detail')
   ;
   }
    
