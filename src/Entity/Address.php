@@ -4,23 +4,30 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Put;
-use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Delete;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\AddressRepository;
 use ApiPlatform\Metadata\GetCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: AddressRepository::class)]
+
 #[ApiResource(
+    normalizationContext: ['groups' => ['address:read']],
+    denormalizationContext: ['groups' => ['address:write']],
+    //operations: [
+        //new Get(security: "is_granted('ROLE_ADMIN') or (is_granted('ROLE_USER') and object.getUser() == user)")
+    //]
     operations:[
-        new GetCollection(),
-        new Get(),
-        new POST(),
-        new Put(),
-        new Delete(),
+        new GetCollection(security: "is_granted('ROLE_ADMIN')"),// GET/api/addresses
+        new Get(security: "is_granted('ROLE_ADMIN') or (is_granted('ROLE_USER') and object.user == user)"), // GET /api/addresses/{id}
+        new POST(security: "is_granted('ROLE_ADMIN')"),// POST/api/addresses
+        new Put(security: "is_granted('ROLE_ADMIN') or (is_granted('ROLE_USER') and object.user == user)"), // PUT /api/addresses/{id}
+        new Delete(security: "is_granted('ROLE_ADMIN')"), // DELETE /api/addresses/{id}
     ]
 )]
 class Address
@@ -28,27 +35,35 @@ class Address
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['address:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['address:read', 'address:write'])]
     private ?string $street = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['address:read', 'address:write'])]
     private ?string $city = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['address:read', 'address:write'])]
     private ?string $zipCode = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['address:read'])]
     private ?string $country = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['address:read', 'address:write'])]
     private ?string $labe = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['address:read'])]
     private ?float $latitude = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['address:read'])]
     private ?float $longitude = null;
 
     /**

@@ -7,6 +7,8 @@ framework:
 
     #esi: true
     #fragments: true
+    asset_mapper: 
+        enabled: false
 
 when@test:
     framework:

@@ -13,13 +13,14 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 
 #[ORM\Entity(repositoryClass: PlanRepository::class)]
+
 #[ApiResource(
     operations:[
-        new GetCollection(),
-        new Get(),
-        new POST(),
-        new Put(),
-        new Delete(),
+        new GetCollection(),// GET /api/plans
+        new Get(),// GET /api/plans/{id}
+        new POST(),// POST /api/plans
+        new Put(),// PUT /api/plans/{id}
+        new Delete(),// DELETE /api/plans/{id}
     ]
 )]
 class Plan

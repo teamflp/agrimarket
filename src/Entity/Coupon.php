@@ -15,12 +15,17 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CouponRepository::class)]
 #[ApiResource(
+    normalizationContext: ['groups' => ['address:read']],
+    denormalizationContext: ['groups' => ['address:write']],
+    //operations: [
+        //new Get(security: "is_granted('ROLE_ADMIN') or (is_granted('ROLE_USER') and object.getUser() == user)")
+    //]
     operations:[
-        new GetCollection(),
-        new Get(),
-        new POST(),
-        new Put(),
-        new Delete(),
+        new GetCollection(),// GET /api/coupons
+        new Get(),// GET /api/coupons/{id}
+        new POST(),// POST /api/coupons
+        new Put(),// PUT /api/coupons/{id}
+        new Delete(),// DELETE /api/coupons/{id}
     ]
 )]
 class Coupon

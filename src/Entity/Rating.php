@@ -13,13 +13,14 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 
 #[ORM\Entity(repositoryClass: RatingRepository::class)]
+
 #[ApiResource(
     operations:[
-        new GetCollection(),
-        new Get(),
-        new POST(),
-        new Put(),
-        new Delete(),
+        new GetCollection(),// GET /api/ratings
+        new Get(),// GET /api/ratings/{id}
+        new POST(),// POST /api/ratings
+        new Put(),// PUT /api/ratings/{id}
+        new Delete(),// DELETE /api/ratings/{id}
     ]
 )]
 class Rating
@@ -109,4 +110,5 @@ class Rating
 
         return $this;
     }
+
 }

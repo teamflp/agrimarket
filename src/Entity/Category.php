@@ -2,38 +2,46 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Delete;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\CategoryRepository;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\Post;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Attribute\Groups;
 //use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[ApiResource(
+    normalizationContext: ['groups' => ['address:read']],
+    denormalizationContext: ['groups' => ['address:write']],
+    //operations: [
+        //new Get(security: "is_granted('ROLE_ADMIN') or (is_granted('ROLE_USER') and object.getUser() == user)")
+    //]
     operations:[
-        new GetCollection(),
-        new Get(),
-        new POST(),
-        new Put(),
-        new Delete(),
-    ]
+        new GetCollection(),// GET /api/categories
+        new Get(), // GET /api/categories/{id}
+        new POST(),// POST /api/categories
+        new Put(),// PUT /api/categories/{id}
+        new Delete(),// DELETE /api/categories/{id}
+    ] 
 )]
+    
+    //  On ajoute cette annotation pour exposer l'entité en tant que ressource API
 class Category
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    //#[Groups(['category:read'])]
+    #[Groups(['category:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    //#[Groups(['category:read', 'category:write'])]
+    #[Groups(['category:read', 'category:write'])]
     private ?string $name = null;
 
     /**

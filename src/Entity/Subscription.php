@@ -12,13 +12,14 @@ use ApiPlatform\Metadata\Put;
 use App\Repository\SubscriptionRepository;
 
 #[ORM\Entity(repositoryClass: SubscriptionRepository::class)]
+
 #[ApiResource(
     operations:[
-        new GetCollection(),
-        new Get(),
-        new POST(),
-        new Put(),
-        new Delete(),
+        new GetCollection(),// GET /api/subscriptions
+        new Get(),// GET /api/subscriptions/{id}
+        new POST(),// POST /api/subscriptions
+        new Put(),//PUT /api/subscriptions/{id}
+        new Delete(),// DELETE /api/subscriptions/{id}
     ]
 )]
 class Subscription
