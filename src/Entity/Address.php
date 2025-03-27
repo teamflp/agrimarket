@@ -23,11 +23,11 @@ use Symfony\Component\Serializer\Attribute\Groups;
         //new Get(security: "is_granted('ROLE_ADMIN') or (is_granted('ROLE_USER') and object.getUser() == user)")
     //]
     operations:[
-        new GetCollection(security: "is_granted('ROLE_ADMIN')"),// GET/api/addresses
-        new Get(security: "is_granted('ROLE_ADMIN') or (is_granted('ROLE_USER') and object.user == user)"), // GET /api/addresses/{id}
-        new POST(security: "is_granted('ROLE_ADMIN')"),// POST/api/addresses
-        new Put(security: "is_granted('ROLE_ADMIN') or (is_granted('ROLE_USER') and object.user == user)"), // PUT /api/addresses/{id}
-        new Delete(security: "is_granted('ROLE_ADMIN')"), // DELETE /api/addresses/{id}
+        new GetCollection(),// GET/api/addresses
+        new Get(), // GET /api/addresses/{id}
+        new POST(),// POST/api/addresses
+        new Put(), // PUT /api/addresses/{id}
+        new Delete(), // DELETE /api/addresses/{id}
     ]
 )]
 class Address
@@ -59,11 +59,11 @@ class Address
     private ?string $labe = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['address:read'])]
+    #[Groups(['address:read', 'address:write'])]
     private ?float $latitude = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['address:read'])]
+    #[Groups(['address:read', 'address:write'])]
     private ?float $longitude = null;
 
     /**
