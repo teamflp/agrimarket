@@ -8,7 +8,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CodeEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
@@ -42,13 +42,10 @@ class PlanCrudController extends AbstractCrudController
             NumberField::new('price','prix'),
             NumberField::new('duration','durée'),
             NumberField::new('maxProducts','Produits maximum'),
-            TextAreaField::new('benefitsAsString', 'Benefits')->onlyOnIndex(),
-            TextAreaField::new('benefits', 'Benefits')->setFormTypeOptions([
+            CodeEditorField::new('benefits', 'Benefits')
+                ->setLanguage('json'),//définit le langage à Json
 
-                'attr' => ['placeholder' => 'Entrez les bénéfices'],
-
-            ])->onlyOnForms(),
-
+          
 
         ];
     }

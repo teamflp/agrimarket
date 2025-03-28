@@ -7,6 +7,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
@@ -35,9 +36,17 @@ class CategoryCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id')-> hideOnForm(),
-            TextField::new('name', 'nom'),
-            AssociationField::new('product', 'produits'),
+            IdField::new('id')->hideOnForm(), 
+            TextField::new('name', 'Nom'),
+
+            // Champ pour gérer la relation avec Product
+
+            AssociationField::new('products', 'Produits')
+                ->setFormTypeOptions([
+
+                    'by_reference' => false, // Important pour gérer les relations
+
+                ])
            
         ];
     }

@@ -47,7 +47,6 @@ class Plan
     private ?int $maxProducts = null;
 
     #[ORM\Column(type: 'json')]
-    #[Assert\Json]
     private array $benefits = [];
 
     public function getId(): ?int
@@ -118,27 +117,19 @@ class Plan
     public function getBenefits(): array
 
     {
+
         return $this->benefits;
 
     }
 
 
-    public function setBenefits(array $benefits): self
+    public function setBenefits(array $benefits): static
 
     {
 
         $this->benefits = $benefits;
 
         return $this;
-
-    }
-
-
-    public function getBenefitsAsString(): string
-
-    {
-
-        return json_encode($this->benefits, JSON_PRETTY_PRINT);
 
     }
 }

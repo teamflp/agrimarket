@@ -41,7 +41,13 @@ class SubscriptionCrudController extends AbstractCrudController
             TextField::new('plan','plan'),
             DateTimeField::new('starDateAt', "Date d'inscription"),
             DateTimeField::new('endDateAt', "date de fin d'inscription"),
-            AssociationField::new('user','utilisateur'),
+            AssociationField::new('users', 'Utilisateur')
+            ->setFormTypeOptions([
+
+            'by_reference' => false, // Important pour gérer les relations
+
+        ])
+        
         ];
     }
     /**

@@ -39,12 +39,16 @@ class AddressCrudController extends AbstractCrudController
             TextField::new('city','ville'),
             TextField::new('zipCode','code Postal'),
             TextField::new('country','pays'),
-            TextField::new('labe','label'),
-            NumberField::new('latitude','latitude'),
-            NumberField::new('longitude','longitude'),
-            AssociationField::new('users', 'Utilisateur'),
+            TextField::new('labe','label')->setRequired(false),
+            NumberField::new('latitude','latitude')->setRequired(false),
+            NumberField::new('longitude','longitude')->setRequired(false),
+            AssociationField::new('users', 'Utilisateur')
+                ->setFormTypeOptions([
 
+                'by_reference' => false, // Important pour gérer les relations
 
+            ])
+                ->setRequired(false),
             
         ];
     }

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\User;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Delete;
 use Doctrine\ORM\Mapping as ORM;
@@ -39,7 +40,8 @@ class Subscription
     private ?\DateTimeImmutable $endDateAt = null;
 
     // Relation avec User (un user peut avoir plusieurs subscriptions)
-    #[ORM\ManyToOne(inversedBy: 'subscriptions')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'subscriptions')]
+    #[ORM\JoinColumn(nullable: false)] // Assurez-vous que cette colonne ne peut pas être nulle
     private ?User $utilisateur = null;
 
     public function getId(): ?int
