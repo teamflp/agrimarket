@@ -43,10 +43,10 @@ class CouponCrudController extends AbstractCrudController
                 'Fixe' => 'fixed'
             ]),
             NumberField::new('value','valeur'),
-            DateTimeField::new('expirationDate', "Date d'expiration"),
             NumberField::new('usageLimit', "Limite d'utilisation")
                 ->setRequired(false),
-            DateTimeField::new('usedCount', "promotion utilisée"),
+            DateTimeField::new('expirationDate', "Date d'expiration"),
+            NumberField::new('usedCount', "promotion utilisée"),
 
         ];
     }
