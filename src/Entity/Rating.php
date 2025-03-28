@@ -40,10 +40,13 @@ class Rating
     private ?\DateTimeImmutable $createdAt = null;
 
     // L’utilisateur qui a laissé la note
-    #[ORM\ManyToOne(inversedBy: 'ratings')]
-    private ?User $buyer = null;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'ratings')]
 
-    #[ORM\ManyToOne(inversedBy: 'ratings')]
+    private ?User  $buyer = null; // Assurez-vous que c'est bien 'buyer' et non 'user'
+
+
+    #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'ratings')]
+
     private ?Product $product = null;
 
     public function getId(): ?int

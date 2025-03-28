@@ -90,17 +90,14 @@ class Plan
         return $this;
     }
 
-    public function getDuration(): ?int
-    {
-        return $this->duration;
-    }
-
-    public function setDuration(int $duration): static
-    {
-        $this->duration = $duration;
-
-        return $this;
-    }
+    public function getDurationInDays(): string
+{
+    return $this->duration . ' jours';
+}
+    public function setDurationInDays(): string
+{
+    return $this->duration . ' jours';
+}
 
     public function getMaxProducts(): ?int
     {
@@ -115,21 +112,27 @@ class Plan
     }
 
     public function getBenefits(): array
-
     {
-
         return $this->benefits;
-
     }
 
-
     public function setBenefits(array $benefits): static
-
     {
-
         $this->benefits = $benefits;
 
         return $this;
+    }
 
+    // Transformation pour EasyAdmin : conversion en JSON
+    public function getBenefitsAsJson(): string
+    {
+        return json_encode($this->benefits, JSON_PRETTY_PRINT);
+    }
+
+    public function setBenefitsAsJson(string $json): self
+    {
+        $decoded = json_decode($json, true);
+        $this->benefits = is_array($decoded) ? $decoded : [];
+        return $this;
     }
 }

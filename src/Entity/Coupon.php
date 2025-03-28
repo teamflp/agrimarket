@@ -54,6 +54,12 @@ class Coupon
     #[ORM\Column]
     private ?int $usedCount = null;
 
+    public function __construct()
+    {
+        // Initialiser "usedCount" à zéro
+        $this->usedCount = 0;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

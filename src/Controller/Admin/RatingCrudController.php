@@ -40,8 +40,8 @@ class RatingCrudController extends AbstractCrudController
             IdField::new('id')->hideOnForm(),
             IntegerField::new('score', 'score'),
             TextField::new('comment', 'commentaire'),
-            DateTimeField::new('createAt', 'Crée à'),
-            AssociationField::new('user', 'utilisateur'),
+            DateTimeField::new('createdAt', 'Crée à'),
+            AssociationField::new('buyer', 'utilisateur'),
             AssociationField::new('product', 'product'),
 
         ];
@@ -58,7 +58,7 @@ class RatingCrudController extends AbstractCrudController
     return $crud
         ->setEntityLabelInSingular('Rating')// Définit le label au singulier
         ->setEntityLabelInPlural('Ratings')// Définit le label au pluriel
-        ->setSearchFields(['name'])// Définit les champs utilisés pour la recherche
+        ->setSearchFields(['comment'])// Définit les champs utilisés pour la recherche
         ->setDefaultSort(['score' => 'ASC'])// Définit le champ et l'ordre de tri par défaut
   ;
   }

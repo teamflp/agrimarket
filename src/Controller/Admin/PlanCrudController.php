@@ -40,10 +40,10 @@ class PlanCrudController extends AbstractCrudController
             TextField::new('name', 'nom'),
             TextEditorField::new('description'),
             NumberField::new('price','prix'),
-            NumberField::new('duration','durée'),
+            TextField::new('durationInDays', 'Durée'),
             NumberField::new('maxProducts','Produits maximum'),
-            CodeEditorField::new('benefits', 'Benefits')
-                ->setLanguage('json'),//définit le langage à Json
+            CodeEditorField::new('benefitsAsJson', 'Benefits')
+                ->setLanguage('javascript'),//définit le langage à Json
 
           
 
