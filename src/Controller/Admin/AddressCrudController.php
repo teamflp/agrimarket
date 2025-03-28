@@ -38,10 +38,11 @@ class AddressCrudController extends AbstractCrudController
             TextField::new('street','rue'),
             TextField::new('city','ville'),
             TextField::new('zipCode','code Postal'),
-            TextField::new('label','label'),
+            TextField::new('country','pays'),
+            TextField::new('labe','label'),
             NumberField::new('latitude','latitude'),
             NumberField::new('longitude','longitude'),
-            AssociationField::new('Users', 'Utilisateur'),
+            AssociationField::new('users', 'Utilisateur'),
 
 
             
@@ -60,7 +61,7 @@ class AddressCrudController extends AbstractCrudController
         ->setEntityLabelInSingular('Address') // Définit le label au singulier
         ->setEntityLabelInPlural('Addresses')// Définit le label au pluriel
         ->setSearchFields(['name'])// Définit les champs utilisés pour la recherche
-        ->setDefaultSort(['name' => 'ASC'])// Définit le champ et l'ordre de tri par défaut
+        ->setDefaultSort(['street' => 'ASC'])// Définit le champ et l'ordre de tri par défaut
   ;
   }
      /**

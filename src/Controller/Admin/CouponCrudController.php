@@ -56,7 +56,7 @@ class CouponCrudController extends AbstractCrudController
         ->setEntityLabelInSingular('Coupon')// Définit le label au singulier
         ->setEntityLabelInPlural('Coupons')// Définit le label au pluriel
         ->setSearchFields(['name'])// Définit les champs utilisés pour la recherche
-        ->setDefaultSort(['name' => 'ASC'])// Définit le champ et l'ordre de tri par défaut
+        ->setDefaultSort(['code' => 'ASC'])// Définit le champ et l'ordre de tri par défaut
   ;
   }
     /**

@@ -57,7 +57,7 @@ class SubscriptionCrudController extends AbstractCrudController
         ->setEntityLabelInSingular('Subscription')// Définit le label au singulier
         ->setEntityLabelInPlural('Subscriptions')// Définit le label au pluriel
         ->setSearchFields(['name'])// Définit les champs utilisés pour la recherche
-        ->setDefaultSort(['name' => 'ASC'])// Définit le champ et l'ordre de tri par défaut
+        ->setDefaultSort(['plan' => 'ASC'])// Définit le champ et l'ordre de tri par défaut
   ;
   }
 

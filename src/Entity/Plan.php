@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Post;
@@ -45,7 +46,8 @@ class Plan
     #[ORM\Column]
     private ?int $maxProducts = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'json')]
+    #[Assert\Json]
     private array $benefits = [];
 
     public function getId(): ?int
@@ -114,14 +116,29 @@ class Plan
     }
 
     public function getBenefits(): array
+
     {
         return $this->benefits;
+
     }
 
-    public function setBenefits(array $benefits): static
+
+    public function setBenefits(array $benefits): self
+
     {
+
         $this->benefits = $benefits;
 
         return $this;
+
+    }
+
+
+    public function getBenefitsAsString(): string
+
+    {
+
+        return json_encode($this->benefits, JSON_PRETTY_PRINT);
+
     }
 }

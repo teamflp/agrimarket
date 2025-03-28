@@ -8,6 +8,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
@@ -39,8 +40,14 @@ class PlanCrudController extends AbstractCrudController
             TextField::new('name', 'nom'),
             TextEditorField::new('description'),
             NumberField::new('price','prix'),
-            NumberField::new('price','prix'),
+            NumberField::new('duration','durée'),
             NumberField::new('maxProducts','Produits maximum'),
+            TextAreaField::new('benefitsAsString', 'Benefits')->onlyOnIndex(),
+            TextAreaField::new('benefits', 'Benefits')->setFormTypeOptions([
+
+                'attr' => ['placeholder' => 'Entrez les bénéfices'],
+
+            ])->onlyOnForms(),
 
 
         ];
