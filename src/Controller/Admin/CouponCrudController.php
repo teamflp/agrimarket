@@ -10,6 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 /**
@@ -47,6 +48,14 @@ class CouponCrudController extends AbstractCrudController
                 ->setRequired(false),
             DateTimeField::new('expirationDate', "Date d'expiration"),
             NumberField::new('usedCount', "promotion utilisée"),
+            AssociationField::new('user', 'Utilisateur')
+                ->setFormTypeOptions([
+                    'by_reference' => false, // Optionnel selon votre logique
+                ]),
+            AssociationField::new('order', 'commande')
+                ->setFormTypeOptions([
+                    'by_reference' => false, // Optionnel selon votre logique
+                ]),
 
         ];
     }

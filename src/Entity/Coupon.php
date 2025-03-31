@@ -60,6 +60,15 @@ class Coupon
         $this->usedCount = 0;
     }
 
+    // Prévoir une relation ManyToOne vers User (ou Order) au cas où
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'coupons')]
+    #[ORM\JoinColumn(nullable: true)] // Rend la relation facultative
+    private ?User $user = null;
+
+    #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'coupons')]
+#[ORM\JoinColumn(nullable: true)]
+private ?User $order = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -134,6 +143,30 @@ class Coupon
     {
         $this->usedCount = $usedCount;
 
+        return $this;
+    }
+
+    // Getter/Setter pour la relation avec User
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+    
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+        return $this;
+    }
+
+    // Getter/Setter pour la relation avec User
+    public function getOrder(): ?Order
+    {
+        return $this->order;
+    }
+    
+    public function setOrder(?Order $order): static
+    {
+        $this->order = $order;
         return $this;
     }
 }
