@@ -58,6 +58,7 @@ class CouponCrudController extends AbstractCrudController
                 ]),
 
         ];
+        
     }
     /**
      * Configure le comportement général du CRUD (Create, Read, Update, Delete) pour l'entité.

@@ -19,15 +19,17 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ApiResource(
     normalizationContext: ['groups' => ['address:read']],
     denormalizationContext: ['groups' => ['address:write']],
-    //operations: [
-        //new Get(security: "is_granted('ROLE_ADMIN') or (is_granted('ROLE_USER') and object.getUser() == user)")
-    //]
     operations:[
-        new GetCollection(),// GET/api/addresses
-        new Get(), // GET /api/addresses/{id}
-        new POST(),// POST/api/addresses
-        new Put(), // PUT /api/addresses/{id}
-        new Delete(), // DELETE /api/addresses/{id}
+        new GetCollection(security: "is_granted('ROLE_USER')"),
+        // GET /api/addresses (Tous les utilisateurs connectés)
+        new Get(security: "is_granted('ROLE_USER')"),
+         // GET /api/addresses/{id} (Tous les utilisateurs connectés)
+        new POST(securityPostDenormalize: "is_granted('ROLE_ADMIN') or is_granted('ROLE_EDITOR')"),
+        // POST /api/addresses (Admin ou Editeur)
+        new Put(securityPostDenormalize: "is_granted('ROLE_ADMIN') or (object.owner == user and is_granted('ROLE_EDITOR'))"), 
+        // PUT /api/addresses/{id} (Admin ou Editeur propriétaire)
+        new Delete(security: "is_granted('ROLE_ADMIN')"), 
+        // DELETE /api/addresses/{id} (Admin seulement)
     ]
 )]
 class Address
@@ -51,7 +53,7 @@ class Address
     private ?string $zipCode = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['address:read'])]
+    #[Groups(['address:read', 'address:write'])]
     private ?string $country = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -70,6 +72,7 @@ class Address
      * @var Collection<int, User>
      */
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'adresses')]
+    #[Groups(['address:read'])]
     private Collection $users;
 
     public function __construct()

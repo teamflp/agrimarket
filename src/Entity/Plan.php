@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Post;
@@ -12,16 +11,25 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PlanRepository;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
+use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PlanRepository::class)]
 
 #[ApiResource(
+    normalizationContext: ['groups' => ['plan:read']],
+    denormalizationContext: ['groups' => ['plan:write']],
     operations:[
-        new GetCollection(),// GET /api/plans
-        new Get(),// GET /api/plans/{id}
-        new POST(),// POST /api/plans
-        new Put(),// PUT /api/plans/{id}
-        new Delete(),// DELETE /api/plans/{id}
+        new GetCollection(security: "is_granted('ROLE_USER')"),
+        // GET /api/addresses (Tous les utilisateurs connectés)
+        new Get(security: "is_granted('ROLE_USER')"),
+         // GET /api/addresses/{id} (Tous les utilisateurs connectés)
+        new POST(securityPostDenormalize: "is_granted('ROLE_ADMIN') or is_granted('ROLE_EDITOR')"),
+        // POST /api/addresses (Admin ou Editeur)
+        new Put(securityPostDenormalize: "is_granted('ROLE_ADMIN') or (object.owner == user and is_granted('ROLE_EDITOR'))"), 
+        // PUT /api/addresses/{id} (Admin ou Editeur propriétaire)
+        new Delete(security: "is_granted('ROLE_ADMIN')"), 
+        // DELETE /api/addresses/{id} (Admin seulement)
     ]
 )]
 class Plan
@@ -29,24 +37,31 @@ class Plan
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['product:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['product:read', 'product:write'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['product:read', 'product:write'])]
     private ?string $description = null;
 
     #[ORM\Column]
+    #[Groups(['product:read', 'product:write'])]
     private ?float $price = null;
 
     #[ORM\Column]
+    #[Groups(['product:read', 'product:write'])]
     private ?int $duration = null;
 
     #[ORM\Column]
+    #[Groups(['product:read', 'product:write'])]
     private ?int $maxProducts = null;
 
     #[ORM\Column(type: 'json')]
+    #[Groups(['product:read', 'product:write'])]
     private array $benefits = [];
 
     public function getId(): ?int

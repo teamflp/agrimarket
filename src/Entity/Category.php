@@ -17,11 +17,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['address:read']],
-    denormalizationContext: ['groups' => ['address:write']],
-    //operations: [
-        //new Get(security: "is_granted('ROLE_ADMIN') or (is_granted('ROLE_USER') and object.getUser() == user)")
-    //]
+   
     operations:[
         new GetCollection(),// GET /api/categories
         new Get(), // GET /api/categories/{id}
@@ -37,11 +33,10 @@ class Category
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['category:read'])]
+    
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['category:read', 'category:write'])]
     private ?string $name = null;
 
     /**
@@ -51,7 +46,6 @@ class Category
      */
 
     #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'category')]
-    // Ici, on n'ajoute pas forcément de groupe ici pour éviter de renvoyer des boucles de sérialisation
     private Collection $products;
 
     public function __construct()
