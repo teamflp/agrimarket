@@ -19,9 +19,9 @@ use Symfony\Component\Validator\Constraints as Assert;
     operations:[
         new GetCollection(),
         new Get(),
-        new POST(security: "is_granted('ROLE_ADMIN')"),
-        new Put(security: "is_granted('ROLE_ADMIN') "), 
-        new Delete(security: "is_granted('ROLE_ADMIN')"), 
+        new POST(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
+        new Put(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"), 
+        new Delete(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"), 
         
     ]
 )]
@@ -46,29 +46,22 @@ class Coupon
     private ?float $value = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['coupon:read'])]
-    private ?\DateTimeInterface $expirationDate = null;
+    #[Groups(['coupon:read', 'write'])]
+    private ?\DateTime $expirationDate = null;
 
     #[ORM\Column(nullable: true)]
     #[Groups(['read', 'write'])]
     private ?int $usageLimit = null;
 
-    #[ORM\Column]
-    private ?int $usedCount = null;
-
-    public function __construct()
-    {
-        // Initialiser "usedCount" à zéro
-        $this->usedCount = 0;
-    }
-
+    
     // Prévoir une relation ManyToOne vers User (ou Order) au cas où
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'coupons')]
     #[ORM\JoinColumn(nullable: true)] // Rend la relation facultative
     private ?User $user = null;
 
+    // Prévoir une relation ManyToOne vers User (ou Order) au cas où
     #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'coupons')]
-    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\JoinColumn(nullable: true)]// Rend la relation facultative
     private ?User $order = null;
 
     public function getId(): ?int
@@ -136,17 +129,6 @@ class Coupon
         return $this;
     }
 
-    public function getUsedCount(): ?int
-    {
-        return $this->usedCount;
-    }
-
-    public function setUsedCount(int $usedCount): static
-    {
-        $this->usedCount = $usedCount;
-
-        return $this;
-    }
 
     // Getter/Setter pour la relation avec User
     public function getUser(): ?User

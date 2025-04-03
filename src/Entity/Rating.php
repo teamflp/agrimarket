@@ -2,25 +2,28 @@
 
 namespace App\Entity;
 
+use Assert\Range;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Post;
 use Doctrine\DBAL\Types\Types;
 use ApiPlatform\Metadata\Delete;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\RatingRepository;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: RatingRepository::class)]
 
 #[ApiResource(
     operations:[
-        new GetCollection(),// GET /api/ratings
-        new Get(),// GET /api/ratings/{id}
-        new POST(),// POST /api/ratings
-        new Put(),// PUT /api/ratings/{id}
-        new Delete(),// DELETE /api/ratings/{id}
+        new GetCollection(),
+        new Get(),
+        new POST(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
+        new Put(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
+        new Delete(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
     ]
 )]
 class Rating
@@ -31,12 +34,20 @@ class Rating
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Assert\Range(
+        min: 0,
+        max: 5,
+        notInRangeMessage: 'La note doit être comprise entre {{ min }} et {{ max }}.'
+    )]
+    #[Groups(['read', 'write'])]
     private ?int $score = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['read', 'write'])]
     private ?string $comment = null;
 
     #[ORM\Column]
+    #[Groups(['read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     // L’utilisateur qui a laissé la note
@@ -61,7 +72,7 @@ class Rating
 
     public function setScore(int $score): static
     {
-        $this->score = $score;
+        $this->score = $score . ' /5';
 
         return $this;
     }

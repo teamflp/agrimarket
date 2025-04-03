@@ -19,11 +19,11 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ApiResource(
    
     operations:[
-        new GetCollection(),// GET /api/categories
-        new Get(), // GET /api/categories/{id}
-        new POST(),// POST /api/categories
-        new Put(),// PUT /api/categories/{id}
-        new Delete(),// DELETE /api/categories/{id}
+        new GetCollection(),
+        new Get(), 
+        new POST(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
+        new Put(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
+        new Delete(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
     ] 
 )]
     
@@ -37,6 +37,7 @@ class Category
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read', 'write'])]
     private ?string $name = null;
 
     /**

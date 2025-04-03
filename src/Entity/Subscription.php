@@ -4,13 +4,14 @@ namespace App\Entity;
 
 use App\Entity\User;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Delete;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
 use App\Repository\SubscriptionRepository;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: SubscriptionRepository::class)]
 
@@ -18,9 +19,9 @@ use App\Repository\SubscriptionRepository;
     operations:[
         new GetCollection(),
         new Get(),
-        new POST(),
-        new Put(),
-        new Delete(),
+        new POST(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
+        new Put(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
+        new Delete(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
     ]
 )]
 class Subscription
@@ -31,13 +32,16 @@ class Subscription
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read', 'write'])]
     private ?string $plan = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $starDateAt = null;
+    #[Groups(['read', 'write'])]
+    private ?\DateTime $starDateAt = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $endDateAt = null;
+    #[Groups(['read', 'write'])]
+    private ?\DateTime $endDateAt = null;
 
     // Relation avec User (un user peut avoir plusieurs subscriptions)
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'subscriptions')]
@@ -61,24 +65,24 @@ class Subscription
         return $this;
     }
 
-    public function getStarDateAt(): ?\DateTimeImmutable
+    public function getStarDateAt(): ?\DateTime
     {
         return $this->starDateAt;
     }
 
-    public function setStarDateAt(\DateTimeImmutable $starDateAt): static
+    public function setStarDateAt(\DateTime $starDateAt): static
     {
         $this->starDateAt = $starDateAt;
 
         return $this;
     }
 
-    public function getEndDateAt(): ?\DateTimeImmutable
+    public function getEndDateAt(): ?\DateTime
     {
         return $this->endDateAt;
     }
 
-    public function setEndDateAt(\DateTimeImmutable $endDateAt): static
+    public function setEndDateAt(\DateTime $endDateAt): static
     {
         $this->endDateAt = $endDateAt;
 

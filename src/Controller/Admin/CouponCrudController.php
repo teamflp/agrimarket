@@ -47,7 +47,6 @@ class CouponCrudController extends AbstractCrudController
             NumberField::new('usageLimit', "Limite d'utilisation")
                 ->setRequired(false),
             DateTimeField::new('expirationDate', "Date d'expiration"),
-            NumberField::new('usedCount', "promotion utilisée"),
             AssociationField::new('user', 'Utilisateur')
                 ->setFormTypeOptions([
                     'by_reference' => false, // Optionnel selon votre logique
