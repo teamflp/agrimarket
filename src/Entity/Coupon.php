@@ -16,19 +16,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CouponRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['coupon:read']],
-    denormalizationContext: ['groups' => ['coupon:write']],
     operations:[
-        new GetCollection(security: "is_granted('ROLE_USER')"),
-        // GET /api/addresses (Tous les utilisateurs connectés)
-        new Get(security: "is_granted('ROLE_USER')"),
-         // GET /api/addresses/{id} (Tous les utilisateurs connectés)
-        new POST(securityPostDenormalize: "is_granted('ROLE_ADMIN') or is_granted('ROLE_EDITOR')"),
-        // POST /api/addresses (Admin ou Editeur)
-        new Put(securityPostDenormalize: "is_granted('ROLE_ADMIN') or (object.owner == user and is_granted('ROLE_EDITOR'))"), 
-        // PUT /api/addresses/{id} (Admin ou Editeur propriétaire)
+        new GetCollection(),
+        new Get(),
+        new POST(security: "is_granted('ROLE_ADMIN')"),
+        new Put(security: "is_granted('ROLE_ADMIN') "), 
         new Delete(security: "is_granted('ROLE_ADMIN')"), 
-        // DELETE /api/addresses/{id} (Admin seulement)
+        
     ]
 )]
 class Coupon
@@ -36,20 +30,19 @@ class Coupon
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['coupon:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['coupon:read', 'coupon:write'])]
+    #[Groups(['read', 'write'])]
     private ?string $code = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\Choice(choices: ['percentage', 'fixed'], message: 'Choisi entre un pourcentage ou une réduction fixe.')]
-    #[Groups(['coupon:read', 'coupon:write'])]
+    #[Groups(['read', 'write'])]
     private ?string $discountType = null;
 
     #[ORM\Column]
-    #[Groups(['coupon:read'])]
+    #[Groups(['read', 'write'])]
     private ?float $value = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -57,7 +50,7 @@ class Coupon
     private ?\DateTimeInterface $expirationDate = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['coupon:read'])]
+    #[Groups(['read', 'write'])]
     private ?int $usageLimit = null;
 
     #[ORM\Column]
@@ -72,13 +65,11 @@ class Coupon
     // Prévoir une relation ManyToOne vers User (ou Order) au cas où
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'coupons')]
     #[ORM\JoinColumn(nullable: true)] // Rend la relation facultative
-    #[Groups(['coupon:read'])]
     private ?User $user = null;
 
     #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'coupons')]
     #[ORM\JoinColumn(nullable: true)]
-    #[Groups(['coupon:read'])]
-private ?User $order = null;
+    private ?User $order = null;
 
     public function getId(): ?int
     {

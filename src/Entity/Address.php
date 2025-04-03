@@ -17,19 +17,13 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ORM\Entity(repositoryClass: AddressRepository::class)]
 
 #[ApiResource(
-    normalizationContext: ['groups' => ['address:read']],
-    denormalizationContext: ['groups' => ['address:write']],
     operations:[
-        new GetCollection(security: "is_granted('ROLE_USER')"),
-        // GET /api/addresses (Tous les utilisateurs connectés)
-        new Get(security: "is_granted('ROLE_USER')"),
-         // GET /api/addresses/{id} (Tous les utilisateurs connectés)
-        new POST(securityPostDenormalize: "is_granted('ROLE_ADMIN') or is_granted('ROLE_EDITOR')"),
-        // POST /api/addresses (Admin ou Editeur)
-        new Put(securityPostDenormalize: "is_granted('ROLE_ADMIN') or (object.owner == user and is_granted('ROLE_EDITOR'))"), 
-        // PUT /api/addresses/{id} (Admin ou Editeur propriétaire)
-        new Delete(security: "is_granted('ROLE_ADMIN')"), 
-        // DELETE /api/addresses/{id} (Admin seulement)
+        new GetCollection(),
+        new Get(),
+        new POST(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
+        new Put(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER'))"), 
+        new Delete(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER'))"), 
+        
     ]
 )]
 class Address
@@ -37,42 +31,40 @@ class Address
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['address:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['address:read', 'address:write'])]
+    #[Groups(['read', 'write'])]
     private ?string $street = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['address:read', 'address:write'])]
+    #[Groups(['read', 'write'])]
     private ?string $city = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['address:read', 'address:write'])]
+    #[Groups(['read', 'write'])]
     private ?string $zipCode = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['address:read', 'address:write'])]
+    #[Groups(['read', 'write'])]
     private ?string $country = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['address:read', 'address:write'])]
+    #[Groups(['read', 'write'])]
     private ?string $labe = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['address:read', 'address:write'])]
+    #[Groups(['read', 'write'])]
     private ?float $latitude = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['address:read', 'address:write'])]
+    #[Groups(['read', 'write'])]
     private ?float $longitude = null;
 
     /**
      * @var Collection<int, User>
      */
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'adresses')]
-    #[Groups(['address:read'])]
     private Collection $users;
 
     public function __construct()

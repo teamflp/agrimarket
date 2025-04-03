@@ -16,11 +16,11 @@ use App\Repository\SubscriptionRepository;
 
 #[ApiResource(
     operations:[
-        new GetCollection(),// GET /api/subscriptions
-        new Get(),// GET /api/subscriptions/{id}
-        new POST(),// POST /api/subscriptions
-        new Put(),//PUT /api/subscriptions/{id}
-        new Delete(),// DELETE /api/subscriptions/{id}
+        new GetCollection(),
+        new Get(),
+        new POST(),
+        new Put(),
+        new Delete(),
     ]
 )]
 class Subscription
