@@ -14,8 +14,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.4.1",
         "doctrine/orm": "^3.3.2",
         "easycorp/easyadmin-bundle": "^4.24.5",
-        "lexik/jwt-authentication-bundle": "^3.1.1",
-        "liip/imagine-bundle": "^2.13.3",
+        "lexik/jwt-authentication-bundle": "^3.1",
         "nelmio/cors-bundle": "^2.5",
         "phpdocumentor/reflection-docblock": "^5.6.1",
         "phpstan/phpdoc-parser": "^2.1",
@@ -83,8 +82,7 @@
     "scripts": {
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd",
-            "importmap:install": "symfony-cmd"
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
         "post-install-cmd": [
             "@auto-scripts"
@@ -98,11 +96,12 @@
     },
     "extra": {
         "symfony": {
-            "allow-contrib": true,
+            "allow-contrib": false,
             "require": "7.2.*"
         }
     },
     "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^4.1",
         "phpunit/phpunit": "^9.6.22",
         "symfony/browser-kit": "7.2.*",
         "symfony/css-selector": "7.2.*",

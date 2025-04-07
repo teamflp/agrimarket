@@ -7,6 +7,8 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\Repository\RatingRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -40,6 +42,17 @@ class Rating
 
     #[ORM\ManyToOne(inversedBy: 'ratings')]
     private ?Product $product = null;
+
+    /**
+     * @var Collection<int, ReviewReport>
+     */
+    #[ORM\OneToMany(targetEntity: ReviewReport::class, mappedBy: 'rating')]
+    private Collection $reviewReports;
+
+    public function __construct()
+    {
+        $this->reviewReports = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -102,6 +115,36 @@ class Rating
     public function setProduct(?Product $product): static
     {
         $this->product = $product;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ReviewReport>
+     */
+    public function getReviewReports(): Collection
+    {
+        return $this->reviewReports;
+    }
+
+    public function addReviewReport(ReviewReport $reviewReport): static
+    {
+        if (!$this->reviewReports->contains($reviewReport)) {
+            $this->reviewReports->add($reviewReport);
+            $reviewReport->setRating($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReviewReport(ReviewReport $reviewReport): static
+    {
+        if ($this->reviewReports->removeElement($reviewReport)) {
+            // set the owning side to null (unless already changed)
+            if ($reviewReport->getRating() === $this) {
+                $reviewReport->setRating(null);
+            }
+        }
 
         return $this;
     }

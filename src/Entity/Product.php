@@ -13,45 +13,48 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Attribute\Groups;
-
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection(),
-        new Get(),
-        new Post(),
-        new Put(security: "is_granted('ROLE_ADMIN', 'ROLE_FARMER')"),
-        new Delete(security: "is_granted('ROLE_ADMIN', 'ROLE_FARMER')"),
-    ]
+        new GetCollection(),    // GET /api/products
+        new Get(),              // GET /api/products/{id}
+        new POST(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),             // POST /api/products
+        new Put(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),              // PUT /api/products
+        new Delete(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),           // DELETE /api/products/{id}
+    ],
 )]
+
 class Product
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    // #[Groups(['product:read'])]
+    #[Groups(['product:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    // #[Groups(['product:read', 'product:write'])]
+    #[Groups(['product:read', 'product:write'])]
+    #[Assert\NotBlank(message: "Le nom est requis")]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    // #[Groups(['product:read', 'product:write'])]
+    #[Groups(['product:read', 'product:write'])]
     private ?string $slug = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    // #[Groups(['product:read', 'product:write'])]
+    #[Groups(['product:read', 'product:write'])]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 0)]
-    // #[Groups(['product:read', 'product:write'])]
+    #[Groups(['product:read', 'product:write'])]
     private ?string $price = null;
 
     #[ORM\Column]
-    // #[Groups(['product:read', 'product:write'])]
+    #[Groups(['product:read', 'product:write'])]
+    #[Assert\PositiveOrZero(message: "La quantité doit être positive ou zéro")]
     private ?int $quantity = null;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
@@ -61,23 +64,25 @@ class Product
     // Relation avec l’agriculteur (User) qui possède le produit
     #[ORM\ManyToOne(inversedBy: 'products')]
     #[ORM\JoinColumn(nullable: false)]
-    // #[Groups(['product:read', 'product:write'])]
+    #[Groups(['product:read', 'product:write'])]
     private ?User $farmer = null;
 
     /**
      * @var Collection<int, OrderItem>
      */
     #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'product')]
+    #[Groups(['product:read'])]
     private Collection $orderItems;
 
     /**
      * @var Collection<int, Rating>
      */
     #[ORM\OneToMany(targetEntity: Rating::class, mappedBy: 'product')]
+    #[Groups(['product:read'])]
     private Collection $ratings;
 
     #[ORM\Column(length: 255)]
-    // #[Groups(['product:read', 'product:write'])]
+    #[Groups(['product:read', 'product:write'])]
     private ?string $illustration = null;
 
     public function __construct()
@@ -245,9 +250,5 @@ class Product
         $this->illustration = $illustration;
 
         return $this;
-    }
-    public function __toString(): string
-    {
-        return $this->name;
     }
 }
