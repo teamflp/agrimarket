@@ -17,6 +17,8 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ORM\Entity(repositoryClass: PlanRepository::class)]
 
 #[ApiResource(
+    normalizationContext: ['groups' => ['plan:read']],
+    denormalizationContext: ['groups' => ['plan:write']],
     operations:[
         new GetCollection(),
         new Get(),

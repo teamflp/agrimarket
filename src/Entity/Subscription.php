@@ -32,15 +32,12 @@ class Subscription
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read', 'write'])]
     private ?string $plan = null;
 
     #[ORM\Column]
-    #[Groups(['read', 'write'])]
     private ?\DateTime $starDateAt = null;
 
     #[ORM\Column]
-    #[Groups(['read', 'write'])]
     private ?\DateTime $endDateAt = null;
 
     // Relation avec User (un user peut avoir plusieurs subscriptions)
@@ -84,7 +81,7 @@ class Subscription
 
     public function setEndDateAt(\DateTime $endDateAt): static
     {
-        $this->endDateAt = $endDateAt;
+        
 
         return $this;
     }

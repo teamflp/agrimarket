@@ -18,6 +18,9 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ORM\Entity(repositoryClass: RatingRepository::class)]
 
 #[ApiResource(
+    normalizationContext: ['groups' => ['rating:read']],
+    denormalizationContext: ['groups' => ['rating:write']],
+
     operations:[
         new GetCollection(),
         new Get(),

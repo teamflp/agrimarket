@@ -16,6 +16,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CouponRepository::class)]
 #[ApiResource(
+    normalizationContext: ['groups' => ['coupon:read']],
+    denormalizationContext: ['groups' => ['coupon:write']],
     operations:[
         new GetCollection(),
         new Get(),
