@@ -11,35 +11,44 @@ use ApiPlatform\Metadata\Put;
 use App\Repository\OrderItemRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: OrderItemRepository::class)]
 #[ApiResource(
     operations: [
         new GetCollection(),    // GET /api/order-items
         new Get(),              // GET /api/order-items/{id}
-        new POST(),             // POST /api/order-items
-        new Put(),              // PUT /api/order-items/{id}
-        new Delete(),           // DELETE /api/order-items/{id}
-    ]
+        new POST(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),             // POST /api/order-items
+        new Put(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),              // PUT /api/order-items/{id}
+        new Delete(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),           // DELETE /api/order-items/{id}
+    ],
 )]
+
 class OrderItem
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['order_item:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'orderItems')]
+    #[Groups(['order_item:read', 'order_item:write'])]
     private ?Order $orders = null;
 
     #[ORM\ManyToOne(inversedBy: 'orderItems')]
+    #[Groups(['order_item:read', 'order_item:write'])]
     private ?Product $product = null;
 
     #[ORM\Column]
+    #[Groups(['order_item:read', 'order_item:write'])]
+    #[Assert\Positive(message: "La quantité doit être positive")]
     private ?int $quantity = null;
 
     // On peut stocker le prix unitaire au moment de la commande
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 0)]
+    #[Groups(['order_item:read', 'order_item:write'])]
     private ?string $unitPrice = null;
 
     public function getId(): ?int

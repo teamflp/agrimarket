@@ -13,36 +13,45 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ApiResource(
     operations: [
         new GetCollection(),    // GET /api/orders
         new Get(),              // GET /api/orders/{id}
-        new POST(),             // POST /api/orders
-        new Put(),              // PUT /api/orders/{id}
-        new Delete(),           // DELETE /api/orders/{id}
-    ]
+        new POST(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),             // POST /api/orders
+        new Put(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),              // PUT /api/orders/{id}
+        new Delete(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),           // DELETE /api/orders/{id}
+    ],
 )]
+
 class Order
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['order:read'])]
     private ?int $id = null;
 
     // Relation avec l’utilisateur acheteur
     #[ORM\ManyToOne(inversedBy: 'orders')]
+    #[Groups(['order:read', 'order:write'])]
     private ?User $buyer = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['order:read', 'order:write'])]
+    #[Assert\Choice(choices: ['pending', 'shipped', 'delivered', 'canceled'], message: 'Statut invalide')]
     private ?string $status = null; // ex: pending, shipped, delivered, canceled...
 
     #[ORM\Column]
+    #[Groups(['order:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     // Montant total (peut être calculé dynamiquement ou stocké)
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 0)]
+    #[Groups(['order:read', 'order:write'])]
     private ?string $total = null;
 
     /**
@@ -51,6 +60,7 @@ class Order
      * Relation avec OrderItem
      */
     #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'orders')]
+    #[Groups(['order:read'])]
     private Collection $orderItems;
 
     public function __construct()

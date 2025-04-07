@@ -11,38 +11,49 @@ use ApiPlatform\Metadata\Put;
 use App\Repository\RefundRequestRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RefundRequestRepository::class)]
 #[ApiResource(
     operations: [
         new GetCollection(),    // GET /api/refund-requests
         new Get(),              // GET /api/refund-requests/{id}
-        new POST(),             // POST /api/refund-requests
-        new Put(),              // PUT /api/refund-requests/{id}
-        new Delete(),           // DELETE /api/refund-requests/{id}
-    ]
+        new POST(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),             // POST /api/refund-requests
+        new Put(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),              // PUT /api/refund-requests/{id}
+        new Delete(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),           // DELETE /api/refund-requests/{id}
+    ],
 )]
+
 class RefundRequest
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['refund_request:read'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['refund_request:read', 'refund_request:write'])]
+    #[Assert\NotBlank(message: "La raison est requise")]
     private ?string $reason = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['refund_request:read', 'refund_request:write'])]
+    #[Assert\Choice(choices: ['pending', 'approved', 'rejected'], message: 'Statut invalide')]
     private ?string $status = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['refund_request:read', 'refund_request:write'])]
     private ?string $message = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['refund_request:read'])]
     private ?\DateTimeInterface $createAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'refundRequests')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['refund_request:read', 'refund_request:write'])]
     private ?User $user = null;
 
     public function getId(): ?int
