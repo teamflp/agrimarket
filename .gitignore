@@ -34,7 +34,7 @@
 ###< liip/imagine-bundle ###
 
 /.env.git_push_automation
-/.git_push_automation.log
+/git_push_automation.log
 /config.yaml
 /feedback.log
 /backup/
