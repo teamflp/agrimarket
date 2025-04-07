@@ -2,6 +2,12 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\OrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,6 +16,15 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\Table(name: '`order`')]
+#[ApiResource (
+    operations: [
+        new GetCollection(),  // GET /api/orders
+        new Get(),            // GET /api/orders/{id}
+        new Post(),           // POST /api/orders
+        new Put(),            // PUT /api/orders/{id}
+        new Delete(),         // DELETE /api/orders/{id}
+    ]
+)]
 class Order
 {
     #[ORM\Id]

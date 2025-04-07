@@ -2,23 +2,40 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
+// use Symfony\Component\Serializer\Annotation\Groups;
+
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
+#[ApiResource (
+    operations: [
+        new GetCollection(),  // GET /api/categories
+        new Get(),            // GET /api/categories/{id}
+        new POST(),           // POST /api/categories
+        new Put(),            // PUT /api/categories/{id}
+        new Delete(),         // DELETE /api/categories/{id}
+    ]
+)] // On ajoute cette annotation pour exposer l'entité en tant que ressource API
 class Category
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['category:read'])]
+   // #[Groups(['category:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['category:read', 'category:write'])]
+    #[Groups(['category:read'])]
     private ?string $name = null;
 
     /**
@@ -82,4 +99,11 @@ class Category
 
         return $this;
     }
+
+    // src/Entity/Category.php
+    public function __toString(): string
+    {
+        return $this->name ?? '';
+    }
+
 }

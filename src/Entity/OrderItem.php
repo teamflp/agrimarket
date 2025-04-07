@@ -2,11 +2,22 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\OrderItemRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OrderItemRepository::class)]
+#[ApiResource(
+    operations: [
+        new GetCollection(),  // GET /api/order-items
+        new Get(),            // GET /api/order-items/{id}
+    ],
+    normalizationContext: ['groups' => ['order_item:read']],
+    denormalizationContext: ['groups' => ['order_item:write']]
+)]
 class OrderItem
 {
     #[ORM\Id]

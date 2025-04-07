@@ -2,18 +2,46 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert; // Ajout de l'espace de noms pour les contraintes
 
 // Représente les informations de base d'un utilisateur, qui peut être un agriculteur (vendeur), un acheteur , ou un administrateur .
 //Nous utilisons un champ roles(array) pour distinguer les différents types d'utilisateurs.
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[ApiResource(
+    operations: [
+        new GetCollection(security: "is_granted('ROLE_ADMIN')"),
+        new Get(security: "is_granted('ROLE_ADMIN') or object == user or is_granted('ROLE_FARMER')"), // Autoriser les fermiers à voir leurs propres données
+        new Post(security: "is_granted('ROLE_ADMIN')"),
+        new Put(security: "is_granted('ROLE_ADMIN') or object == user or is_granted('ROLE_FARMER')", validationContext: ['groups' => ['user:update']]), // Autoriser les fermiers à modifier leurs propres données
+        new Delete(security: "is_granted('ROLE_ADMIN')"),
+        // Opération dédiée pour la modification du mot de passe (si nécessaire)
+        // new Put(
+        //     uriTemplate: '/users/{id}/password',
+        //     security: "object == user or is_granted('ROLE_FARMER')", // Autoriser les fermiers à modifier leur mot de passe
+        //     denormalizationContext: ['groups' => ['user:change-password']],
+        //     validationContext: ['groups' => ['user:change-password']],
+        //     processor: ChangePasswordProcessor::class,
+        //     name: 'change_password',
+        // ),
+    ],
+    normalizationContext: ['groups' => ['user:read']],
+    denormalizationContext: ['groups' => ['user:write']],
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -22,21 +50,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Groups(['user:read', 'user:write'])]
+    #[Assert\NotBlank]
+    #[Assert\Email]
     private ?string $email = null;
 
     /**
      * @var list<string> The user roles
      */
     #[ORM\Column]
+    #[Groups(['admin:write', 'user:read'])]
     private array $roles = [];
 
     /**
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Groups(['user:write'])]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 6)]
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:read', 'user:write'])]
+    #[Assert\NotBlank]
     private ?string $phoneNumber = null;
 
     /**
@@ -65,6 +102,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Rating::class, mappedBy: 'buyer')]
     private Collection $ratings;
 
+    #[ORM\Column]
+    private ?bool $isActive = null;
+
+    #[ORM\Column(length: 255)]
+    #[Groups(['user:read', 'user:write'])]
+    #[Assert\NotBlank]
+    private ?string $firstname = null;
+
+    #[ORM\Column(length: 255)]
+    #[Groups(['user:read', 'user:write'])]
+    #[Assert\NotBlank]
+    private ?string $lastname = null;
+
     public function __construct()
     {
         $this->subscriptions = new ArrayCollection();
@@ -72,7 +122,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->orders = new ArrayCollection();
         $this->ratings = new ArrayCollection();
     }
-
     public function getId(): ?int
     {
         return $this->id;
@@ -276,6 +325,47 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $rating->setBuyer(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): static
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->email;
+    }
+
+    public function getFirstname(): ?string
+    {
+        return $this->firstname;
+    }
+
+    public function setFirstname(string $firstname): static
+    {
+        $this->firstname = $firstname;
+
+        return $this;
+    }
+
+    public function getLastname(): ?string
+    {
+        return $this->lastname;
+    }
+
+    public function setLastname(string $lastname): static
+    {
+        $this->lastname = $lastname;
 
         return $this;
     }

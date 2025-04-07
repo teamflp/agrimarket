@@ -2,10 +2,27 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 use App\Repository\SubscriptionRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SubscriptionRepository::class)]
+#[ApiResource(
+    operations: [
+
+       new getCollection(), // GET /api/subscriptions
+
+        new get(),          // GET /api/subscriptions/{id}
+
+        new post()          // POST /api/subscriptions
+
+    ],
+    normalizationContext: ['groups' => ['subscription:read']],
+    denormalizationContext: ['groups' => ['subscription:write']]
+)]
 class Subscription
 {
     #[ORM\Id]
