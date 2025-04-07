@@ -40,7 +40,8 @@ class Rating
     #[Assert\Range(
         min: 0,
         max: 5,
-        notInRangeMessage: 'La note doit être comprise entre {{ min }} et {{ max }}.'
+        notInRangeMessage: 'La note doit être comprise entre {{ min }} et {{ max }}.',
+        groups: ['read', 'write', 'easyadmin']
     )]
     #[Groups(['read', 'write'])]
     private ?int $score = null;

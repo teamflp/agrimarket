@@ -38,7 +38,8 @@ class RatingCrudController extends AbstractCrudController
     {
         return [
             IdField::new('id')->hideOnForm(),
-            IntegerField::new('score', 'score'),
+            IntegerField::new('score', 'note')
+                ->setRequired(true), // exemple pour rendre le champ obligatoire
             TextField::new('comment', 'commentaire'),
             DateTimeField::new('createdAt', 'Crée à'),
             AssociationField::new('buyer', 'utilisateur'),
