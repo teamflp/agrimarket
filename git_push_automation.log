@@ -1,0 +1,39 @@
+2025-04-07 23:04:00 [INFO] : Démarrage du script v1.1.6
+2025-04-07 23:11:39 [INFO] : Démarrage du script v1.1.7
+2025-04-07 23:19:28 [INFO] : Démarrage du script v1.1.7
+2025-04-07 23:19:28 [INFO] : dry-run activé.
+2025-04-07 23:19:28 [INFO] : Options : -v -d -C
+2025-04-07 23:19:28 [INFO] : Fichier de configuration chargé : ./.env.git_push_automation
+2025-04-07 23:19:28 [INFO] : Toutes les dépendances sont satisfaites.
+2025-04-07 23:19:29 [INFO] : Vérification du dépôt Git réussie.
+2025-04-07 23:19:29 [INFO] : Utilisateur actuel : teamflp@yahoo.it
+2025-04-07 23:19:29 [INFO] : Vérification du dépôt Git réussie.
+2025-04-07 23:19:29 [INFO] : Utilisateur actuel : teamflp@yahoo.it
+2025-04-07 23:19:47 [INFO] : Répertoire de sauvegarde créé : ./backup/backup_20250407_231947
+2025-04-07 23:19:47 [INFO] : Sauvegarde terminée.
+2025-04-07 23:19:48 [INFO] : Affichage des modifications.
+2025-04-07 23:19:54 [INFO] : Fichiers par utilisateur : .
+2025-04-07 23:19:54 [INFO] : Fichiers à ajouter : .
+2025-04-07 23:20:16 [INFO] : Aucun test à exécuter (RUN_TESTS != y ou TEST_COMMAND non défini).
+2025-04-07 23:20:16 [INFO] : Simul commit : Amélioration: Amélioration
+2025-04-07 23:20:28 [INFO] : Branche distante cible : master
+2025-04-07 23:21:28 [INFO] : Pas de création de release GitLab (TAG_NAME, GITLAB_PROJECT_ID, GITLAB_TOKEN manquants ou DRY_RUN activé).
+2025-04-07 23:21:28 [INFO] : SLACK_WEBHOOK_URL non défini, pas de notif Slack.
+2025-04-07 23:21:28 [INFO] : GITLAB_PROJECT_ID ou GITLAB_TOKEN non défini, pas de notif GitLab.
+2025-04-07 23:21:28 [INFO] : EMAIL_RECIPIENTS non défini, pas d'e-mail.
+2025-04-07 23:21:28 [INFO] : MATTERMOST_WEBHOOK_URL non défini.
+2025-04-07 23:21:28 [WARN] : SLACK_WEBHOOK_URL non défini, pas de notif Slack.
+2025-04-07 23:24:06 [INFO] : Feedback collecté.
+2025-04-07 23:28:15 [INFO] : Démarrage du script v1.1.7
+2025-04-07 23:28:15 [INFO] : Options : -C
+2025-04-07 23:28:15 [INFO] : Fichier de configuration chargé : ./.env.git_push_automation
+2025-04-07 23:28:15 [INFO] : Toutes les dépendances sont satisfaites.
+2025-04-07 23:28:15 [INFO] : Vérification du dépôt Git réussie.
+2025-04-07 23:28:16 [INFO] : Utilisateur actuel : teamflp@yahoo.it
+2025-04-07 23:28:16 [INFO] : Vérification du dépôt Git réussie.
+2025-04-07 23:28:16 [INFO] : Utilisateur actuel : teamflp@yahoo.it
+2025-04-07 23:28:18 [INFO] : Répertoire de sauvegarde créé : ./backup/backup_20250407_232818
+2025-04-07 23:28:18 [INFO] : Sauvegarde terminée.
+2025-04-07 23:28:24 [INFO] : Affichage des modifications.
+2025-04-07 23:28:43 [INFO] : Fichiers par utilisateur : .
+2025-04-07 23:28:43 [INFO] : Fichiers à ajouter : .
