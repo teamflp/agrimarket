@@ -81,7 +81,7 @@ class Subscription
 
     public function setEndDateAt(\DateTime $endDateAt): static
     {
-        
+        $this->endDateAt = $endDateAt;
 
         return $this;
     }

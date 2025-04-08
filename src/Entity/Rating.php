@@ -2,7 +2,8 @@
 
 namespace App\Entity;
 
-use Assert\Range;
+
+
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Post;
@@ -12,8 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\RatingRepository;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RatingRepository::class)]
 
@@ -37,14 +38,13 @@ class Rating
     private ?int $id = null;
 
     #[ORM\Column]
-    #[Assert\Range(
-        min: 0,
-        max: 5,
-        notInRangeMessage: 'La note doit être comprise entre {{ min }} et {{ max }}.',
+    #[Assert\Choice(
+        choices: ["1", "2", "3", "4", "5"],
+        message: "Le score doit être 1, 2, 3, 4, ou 5.",
         groups: ['read', 'write', 'easyadmin']
     )]
     #[Groups(['read', 'write'])]
-    private ?int $score = null;
+    private ?string $score = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Groups(['read', 'write'])]
@@ -69,7 +69,7 @@ class Rating
         return $this->id;
     }
 
-    public function getScore(): ?int
+    public function getScore(): ?string
     {
         return $this->score;
     }

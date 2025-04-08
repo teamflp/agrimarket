@@ -7,10 +7,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 /**
  * CrudController pour gérer les entités Address dans l'interface EasyAdmin.
@@ -38,8 +39,15 @@ class RatingCrudController extends AbstractCrudController
     {
         return [
             IdField::new('id')->hideOnForm(),
-            IntegerField::new('score', 'note')
-                ->setRequired(true), // exemple pour rendre le champ obligatoire
+            ChoiceField::new('score', 'note')
+            ->setChoices([
+                // 'Label affiché' => 'Valeur stockée (doit correspondre aux choix de Assert\Choice)'
+                '1' => '1',
+                '2' => '2',
+                '3' => '3',
+                '4' => '4',
+                '5' => '5',
+            ]),
             TextField::new('comment', 'commentaire'),
             DateTimeField::new('createdAt', 'Crée à'),
             AssociationField::new('buyer', 'utilisateur'),
