@@ -19,14 +19,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection(),    // GET /api/products
-        new Get(),              // GET /api/products/{id}
-        new POST(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),             // POST /api/products
-        new Put(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),              // PUT /api/products
-        new Delete(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),           // DELETE /api/products/{id}
+        new GetCollection(),
+        new Get(),
+        new POST(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
+        new Put(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
+        new Delete(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
     ],
+    normalizationContext: ['groups' => ['product:read']],
+    denormalizationContext: ['groups' => ['product:write']],
 )]
-
 class Product
 {
     #[ORM\Id]
@@ -58,27 +59,26 @@ class Product
     private ?int $quantity = null;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
-    #[Groups(['product:read', 'product:write'])]
+    #[Groups(['product:read', 'product:write', 'product:category'])]
     private ?Category $category = null;
 
-    // Relation avec l’agriculteur (User) qui possède le produit
     #[ORM\ManyToOne(inversedBy: 'products')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['product:read', 'product:write'])]
+    #[Groups(['product:read', 'product:farmer'])]
     private ?User $farmer = null;
 
     /**
      * @var Collection<int, OrderItem>
      */
     #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'product')]
-    #[Groups(['product:read'])]
+    #[Groups(['product:read', 'product:orderItems'])]
     private Collection $orderItems;
 
     /**
      * @var Collection<int, Rating>
      */
     #[ORM\OneToMany(targetEntity: Rating::class, mappedBy: 'product')]
-    #[Groups(['product:read'])]
+    #[Groups(['product:read', 'product:ratings'])]
     private Collection $ratings;
 
     #[ORM\Column(length: 255)]
