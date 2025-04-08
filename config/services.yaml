@@ -1,24 +1,29 @@
-# This file is the entry point to configure your own services.
-# Files in the packages/ subdirectory configure your dependencies.
+# config/services.yaml
 
-# Put parameters here that don't need to change on each machine where the app is deployed
-# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
-parameters:
+parameters:  # Niveau 0 (pas d'indentation)
+    # Put parameters here that don't need to change on each machine where the app is deployed
+    # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 
-services:
+services:  # Niveau 0 (pas d'indentation)
     # default configuration for services in *this* file
-    _defaults:
-        autowire: true      # Automatically injects dependencies in your services.
-        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+    _defaults:  # Niveau 1 (2 espaces)
+        autowire: true      # Automatically injects dependencies in your services.  Niveau 2 (4 espaces)
+        autoconfigure: true   # Automatically registers your services as commands, event subscribers, etc. Niveau 2 (4 espaces)
+        public: false          # IMPORTANT: set to "false" to require type-hinting injection on services Niveau 2 (4 espaces)
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
-    App\:
-        resource: '../src/'
-        exclude:
-            - '../src/DependencyInjection/'
-            - '../src/Entity/'
-            - '../src/Kernel.php'
+    App\: # Niveau 1 (2 espaces)
+        resource: '../src/*'  # Niveau 2 (4 espaces)
+        exclude:  # Niveau 2 (4 espaces)
+            - '../src/DependencyInjection/'  # Niveau 3 (6 espaces)
+            - '../src/Entity/'               # Niveau 3 (6 espaces)
+            - '../src/Kernel.php'            # Niveau 3 (6 espaces)
+
+    # Explicit service definition for CategoryFixtures:
+    App\DataFixtures\CategoryFixtures: # Niveau 1 (2 espaces)
+        tags: # Niveau 2 (4 espaces)
+            - { name: 'doctrine.fixture.tag', group: 'category' } # Niveau 3 (6 espaces)
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

@@ -8,7 +8,5 @@ api_platform:
             vary: ['Content-Type', 'Authorization', 'Origin']
     mapping: 
         paths: 
-            - '%kernel.project_dir%/src/Entity'
-    formats:
-        jsonld: ['application/ld+json']
-        # json: ['application/json']
+            - '%kernel.project_dir%/src/Entity'  
+            

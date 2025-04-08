@@ -2,13 +2,17 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Plan;
+use App\Entity\Coupon;
+use App\Entity\Rating;
+use App\Entity\Address;
 use App\Entity\Category;
-use App\Entity\Order;
-use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
-use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
+use App\Entity\Subscription;
 use Symfony\Component\HttpFoundation\Response;
+use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
+use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
+use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 
 #[AdminDashboard(routePath: '/admin', routeName: 'admin')]
 class DashboardController extends AbstractDashboardController
@@ -35,7 +39,7 @@ class DashboardController extends AbstractDashboardController
         // Option 3. You can render some custom template to display a proper dashboard with widgets, etc.
         // (tip: it's easier if your template extends from @EasyAdmin/page/content.html.twig)
         //
-        // return $this->render('some/path/my-dashboard.html.twig');
+         return $this->render('some/path/my-dashboard.html.twig');
     }
 
     public function configureDashboard(): Dashboard
@@ -47,12 +51,11 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'home');
-        yield MenuItem::linkToCrud('Orders', "box", Category::class);
-        yield MenuItem::linkToCrud('OrderItems', "box", Category::class);
-        yield MenuItem::linkToCrud('Products', "box", Category::class);
-        yield MenuItem::linkToCrud('Notifications', "box", Category::class);
-        yield MenuItem::linkToCrud('RefundRequests', "box", Category::class);
-        yield MenuItem::linkToCrud('ReviewReport', "box", Category::class);
-        // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
+        yield MenuItem::linkToCrud('Categories', 'list', Category::class);
+        yield MenuItem::linkToCrud('ratings', 'box', Rating::class);
+        yield MenuItem::linkToCrud('subcriptions', 'box', Subscription::class);
+        yield MenuItem::linkToCrud('addresses', 'box', Address::class);
+        yield MenuItem::linkToCrud('coupons', 'box', Coupon::class);
+        yield MenuItem::linkToCrud('plans', 'box', Plan::class);
     }
 }

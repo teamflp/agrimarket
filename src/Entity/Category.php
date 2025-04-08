@@ -2,40 +2,44 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
-use App\Repository\CategoryRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Delete;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
-
-// use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Metadata\ApiResource;
+use App\Repository\CategoryRepository;
+use ApiPlatform\Metadata\GetCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Attribute\Groups;
+//use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
-#[ApiResource (
-    operations: [
-        new GetCollection(),  // GET /api/categories
-        new Get(),            // GET /api/categories/{id}
-        new POST(),           // POST /api/categories
-        new Put(),            // PUT /api/categories/{id}
-        new Delete(),         // DELETE /api/categories/{id}
-    ]
-)] // On ajoute cette annotation pour exposer l'entité en tant que ressource API
+#[ApiResource(
+    normalizationContext: ['groups' => ['category:read']],
+    denormalizationContext: ['groups' => ['category:write']],
+   
+    operations:[
+        new GetCollection(),
+        new Get(), 
+        new POST(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
+        new Put(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
+        new Delete(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
+    ] 
+)]
+    
+    //  On ajoute cette annotation pour exposer l'entité en tant que ressource API
 class Category
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-   // #[Groups(['category:read'])]
+    
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['category:read'])]
+    #[Groups(['read', 'write'])]
     private ?string $name = null;
 
     /**
@@ -45,7 +49,6 @@ class Category
      */
 
     #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'category')]
-    // Ici, on n'ajoute pas forcément de groupe ici pour éviter de renvoyer des boucles de sérialisation
     private Collection $products;
 
     public function __construct()
@@ -99,11 +102,4 @@ class Category
 
         return $this;
     }
-
-    // src/Entity/Category.php
-    public function __toString(): string
-    {
-        return $this->name ?? '';
-    }
-
 }

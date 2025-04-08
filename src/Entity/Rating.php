@@ -2,22 +2,31 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
+use Assert\Range;
 use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Post;
-use App\Repository\RatingRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
+use ApiPlatform\Metadata\Delete;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\RatingRepository;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: RatingRepository::class)]
+
 #[ApiResource(
-    operations: [
-        new GetCollection(),  // GET /api/ratings
-        new Get(),            // GET /api/ratings/{id}
-        new Post(),           // POST /api/ratings
+    normalizationContext: ['groups' => ['rating:read']],
+    denormalizationContext: ['groups' => ['rating:write']],
+
+    operations:[
+        new GetCollection(),
+        new Get(),
+        new POST(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
+        new Put(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
+        new Delete(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
     ]
 )]
 class Rating
@@ -28,31 +37,32 @@ class Rating
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Assert\Range(
+        min: 0,
+        max: 5,
+        notInRangeMessage: 'La note doit être comprise entre {{ min }} et {{ max }}.',
+        groups: ['read', 'write', 'easyadmin']
+    )]
+    #[Groups(['read', 'write'])]
     private ?int $score = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['read', 'write'])]
     private ?string $comment = null;
 
     #[ORM\Column]
+    #[Groups(['read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     // L’utilisateur qui a laissé la note
-    #[ORM\ManyToOne(inversedBy: 'ratings')]
-    private ?User $buyer = null;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'ratings')]
 
-    #[ORM\ManyToOne(inversedBy: 'ratings')]
+    private ?User  $buyer = null; // Assurez-vous que c'est bien 'buyer' et non 'user'
+
+
+    #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'ratings')]
+
     private ?Product $product = null;
-
-    /**
-     * @var Collection<int, ReviewReport>
-     */
-    #[ORM\OneToMany(targetEntity: ReviewReport::class, mappedBy: 'rating')]
-    private Collection $reviewReports;
-
-    public function __construct()
-    {
-        $this->reviewReports = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -66,7 +76,7 @@ class Rating
 
     public function setScore(int $score): static
     {
-        $this->score = $score;
+        $this->score = $score . ' /5';
 
         return $this;
     }
@@ -119,33 +129,4 @@ class Rating
         return $this;
     }
 
-    /**
-     * @return Collection<int, ReviewReport>
-     */
-    public function getReviewReports(): Collection
-    {
-        return $this->reviewReports;
-    }
-
-    public function addReviewReport(ReviewReport $reviewReport): static
-    {
-        if (!$this->reviewReports->contains($reviewReport)) {
-            $this->reviewReports->add($reviewReport);
-            $reviewReport->setRating($this);
-        }
-
-        return $this;
-    }
-
-    public function removeReviewReport(ReviewReport $reviewReport): static
-    {
-        if ($this->reviewReports->removeElement($reviewReport)) {
-            // set the owning side to null (unless already changed)
-            if ($reviewReport->getRating() === $this) {
-                $reviewReport->setRating(null);
-            }
-        }
-
-        return $this;
-    }
 }
