@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Post;
@@ -10,24 +12,24 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\AddressRepository;
 use ApiPlatform\Metadata\GetCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 #[ORM\Entity(repositoryClass: AddressRepository::class)]
-
 #[ApiResource(
-    normalizationContext: ['groups' => ['address:read']],
-    denormalizationContext: ['groups' => ['address:write']],
-    operations:[
+    operations: [
         new GetCollection(),
         new Get(),
         new POST(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
-        new Put(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER'))"), 
-        new Delete(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER'))"), 
-        
-    ]
+        new Put(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER'))"),
+        new Delete(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER'))"),
+    ],
+    normalizationContext: ['groups' => ['address:read']],
+    denormalizationContext: ['groups' => ['address:write']],
+    paginationItemsPerPage: 10,
 )]
+#[ApiFilter(SearchFilter::class, properties: ['city' => 'partial', 'zipCode' => 'partial'])]
 class Address
 {
     #[ORM\Id]
@@ -36,43 +38,45 @@ class Address
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read', 'write'])]
+    #[Groups(['address:read', 'address:write'])]
+    #[NotBlank (message: 'Veuillez renseigner le champ rue')]
     private ?string $street = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read', 'write'])]
+    #[Groups(['address:read', 'address:write'])]
+    #[NotBlank (message: 'Veuillez renseigner le champ ville')]
     private ?string $city = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read', 'write'])]
+    #[Groups(['address:read', 'address:write'])]
+    #[NotBlank (message: 'Veuillez renseigner le champ code postal')]
+    #[Regex(
+        pattern: '/^\d{5}$/',
+        message: 'Le code postal doit contenir 5 chiffres.',
+    )]
     private ?string $zipCode = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read', 'write'])]
+    #[Groups(['address:read', 'address:write'])]
+    #[NotBlank (message: 'Veuillez renseigner le champ pays')]
     private ?string $country = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['read', 'write'])]
+    #[Groups(['address:read', 'address:write'])]
     private ?string $labe = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['read', 'write'])]
+    #[Groups(['address:read', 'address:write'])]
     private ?float $latitude = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['read', 'write'])]
+    #[Groups(['address:read', 'address:write'])]
     private ?float $longitude = null;
 
-    /**
-     * @var Collection<int, User>
-     */
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'adresses')]
-    private Collection $users;
-
-    public function __construct()
-    {
-        $this->users = new ArrayCollection();
-    }
+    #[ORM\ManyToOne(inversedBy: 'addresses')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['address:read', 'address:write'])]
+    private ?User $user = null;
 
     public function getId(): ?int
     {
@@ -163,29 +167,14 @@ class Address
         return $this;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUsers(): Collection
+    public function getUser(): ?User
     {
-        return $this->users;
+        return $this->user;
     }
 
-    public function addUser(User $user): static
+    public function setUser(?User $user): static
     {
-        if (!$this->users->contains($user)) {
-            $this->users->add($user);
-            $user->addAdress($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUser(User $user): static
-    {
-        if ($this->users->removeElement($user)) {
-            $user->removeAdress($this);
-        }
+        $this->user = $user;
 
         return $this;
     }

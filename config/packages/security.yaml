@@ -16,6 +16,16 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
+        login:
+            pattern: ^/api/users
+            stateless: true
+            json_login:
+                check_path: /api/users
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+            provider: app_user_provider
+
+
         # Firewall principal
         main:
             lazy: true

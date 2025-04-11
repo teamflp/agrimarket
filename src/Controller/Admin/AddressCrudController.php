@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Address;
+use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -44,7 +45,10 @@ class AddressCrudController extends AbstractCrudController
             NumberField::new('longitude','longitude')->setRequired(false),
             AssociationField::new('users', 'Utilisateur')
                 ->setFormTypeOptions([
-
+                    'class' => User::class,
+                    'choice_label' => 'email', // Champ à afficher dans le select
+                    'multiple' => true, // Permet de sélectionner plusieurs utilisateurs
+                    'expanded' => false, // Affiche un select au lieu de cases à cocher
                 'by_reference' => false, // Important pour gérer les relations
 
             ])

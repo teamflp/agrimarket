@@ -17,6 +17,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
+#[ORM\Table(name: '`order`')]
 #[ApiResource(
     operations: [
         new GetCollection(),    // GET /api/orders
@@ -26,7 +27,6 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Delete(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),           // DELETE /api/orders/{id}
     ],
 )]
-
 class Order
 {
     #[ORM\Id]

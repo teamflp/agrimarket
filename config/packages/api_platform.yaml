@@ -1,12 +1,22 @@
 api_platform:
-    title: Hello API Platform
+    title: AGRIMARKET
     version: 1.0.0
-    show_webby: true
     defaults:
         stateless: true
         cache_headers:
             vary: ['Content-Type', 'Authorization', 'Origin']
-    mapping: 
-        paths: 
-            - '%kernel.project_dir%/src/Entity'  
-            
+        pagination:
+            items_per_page: 30 # Nombre d'éléments par page par défaut
+        normalization_context:
+            groups: ['read'] # Groupe de sérialisation par défaut pour lecture
+        denormalization_context:
+            groups: ['write'] # Groupe de sérialisation par défaut pour écriture
+    formats:
+        json: ['application/json'] # Formats pris en charge
+        jsonld: ['application/ld+json']
+        multipart: ['multipart/form-data']
+    mapping:
+        paths:
+            - '%kernel.project_dir%/src/Entity'
+    exception_to_status:
+        App\Exception\UserNotFoundException: 404 # Exemple de gestion d'exception

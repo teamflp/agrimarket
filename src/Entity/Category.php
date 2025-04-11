@@ -17,16 +17,15 @@ use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['category:read']],
-    denormalizationContext: ['groups' => ['category:write']],
-   
-    operations:[
+    operations: [
         new GetCollection(),
-        new Get(), 
+        new Get(),
         new POST(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
         new Put(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
         new Delete(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
-    ] 
+    ],
+    normalizationContext: ['groups' => ['category:read']],
+    denormalizationContext: ['groups' => ['category:write']]
 )]
     
     //  On ajoute cette annotation pour exposer l'entité en tant que ressource API

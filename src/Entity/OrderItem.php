@@ -47,7 +47,7 @@ class OrderItem
     private ?int $quantity = null;
 
     // On peut stocker le prix unitaire au moment de la commande
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 0)]
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     #[Groups(['order_item:read', 'order_item:write'])]
     private ?string $unitPrice = null;
 

@@ -22,7 +22,7 @@ class ReviewReportController extends AbstractCrudController
         return ReviewReport::class; // Indique que contrôleur gère l'entité ReviewReport
     }
 
-    public function configureFields(string $reviewReport): iterable // Configure les champs qui seront affichés dans l'interface d'administration
+    public function configureFields(string $pageName): iterable // Configure les champs qui seront affichés dans l'interface d'administration
     {
         return [
             IdField::new('id')->hideOnForm(), // Champ ID, caché dans le formulaire mais visible dans la liste

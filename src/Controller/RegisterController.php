@@ -24,7 +24,8 @@ class RegisterController extends AbstractController
     ): JsonResponse {
         try {
             $user = $serializer->deserialize($request->getContent(), User::class, 'json', ['groups' => ['user:write']]);
-            dump($user); // Vérifier l'objet User désérialisé
+            // Vérifier l'objet User désérialisé
+            //dump($user);
 
             $existingUser = $entityManager->getRepository(User::class)->findOneBy(['email' => $user->getEmail()]);
             if ($existingUser) {
@@ -44,7 +45,7 @@ class RegisterController extends AbstractController
             $user->setPassword($hashedPassword);
 
             $user->setRoles(['ROLE_USER']); // Attribuer le rôle ROLE_USER
-            $user->setIsActive(true); // set isActive to true
+            // $user->setIsActivated(true); // set isActive to true
 
             $entityManager->persist($user);
             $entityManager->flush();
