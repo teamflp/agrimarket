@@ -2,8 +2,10 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Order;
 use App\Entity\OrderItem;
 use App\Entity\Plan;
+use App\Entity\Product;
 use App\Entity\Coupon;
 use App\Entity\Rating;
 use App\Entity\Address;
@@ -11,8 +13,6 @@ use App\Entity\Category;
 use App\Entity\Subscription;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\Response;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -53,6 +53,7 @@ class DashboardController extends AbstractDashboardController
             ->setTitle('Agrimarket');
     }
 
+    /*
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'home');
@@ -89,6 +90,37 @@ class DashboardController extends AbstractDashboardController
             ]);
             yield MenuItem::linkToCrud('Addresses', 'box', Address::class);
         }
+    }
+    */
+
+    public function configureMenuItems(): iterable
+    {
+        yield MenuItem::linkToDashboard('Dashboard', 'home');
+
+            yield MenuItem::section('Gestion des utilisateurs');
+            yield MenuItem::linkToCrud('Users', 'box', User::class);
+
+            yield MenuItem::section('Gestion des produits');
+            yield MenuItem::subMenu('Produits', 'fa fa-box')->setSubItems([
+                MenuItem::linkToCrud('Products', 'box', Product::class),
+                MenuItem::linkToCrud('Categories', 'list', Category::class),
+                MenuItem::linkToCrud('Ratings', 'start', Rating::class),
+                MenuItem::linkToCrud('Coupons', 'percent', Coupon::class)
+                    ->setAction('index'),
+            ]);
+
+            yield MenuItem::section('Gestion des abonnements');
+            yield MenuItem::subMenu('Abonnements', 'fa fa-plan')->setSubItems([
+                MenuItem::linkToCrud('Subscriptions', 'box', Subscription::class),
+                MenuItem::linkToCrud('Plans', 'list', Plan::class),
+            ]);
+
+            yield MenuItem::section('Gestion des commandes');
+            yield MenuItem::subMenu('Commandes', 'fa fa-shopping-cart')->setSubItems([
+                MenuItem::linkToCrud('Orders', 'box', Order::class),
+                MenuItem::linkToCrud('Order Items', 'list', OrderItem::class),
+            ]);
+            yield MenuItem::linkToCrud('Addresses', 'box', Address::class);
     }
 
 }

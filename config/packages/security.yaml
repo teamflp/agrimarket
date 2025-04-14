@@ -16,15 +16,6 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        login:
-            pattern: ^/api/users
-            stateless: true
-            json_login:
-                check_path: /api/users
-                success_handler: lexik_jwt_authentication.handler.authentication_success
-                failure_handler: lexik_jwt_authentication.handler.authentication_failure
-            provider: app_user_provider
-
 
         # Firewall principal
         main:
@@ -51,6 +42,7 @@ security:
     access_control:
     # Vous pouvez restreindre l’accès à certaines routes
     # - { path: ^/admin, roles: ROLE_ADMIN }
+      - { path: '^/api/users', roles: 'IS_AUTHENTICATED_ANONYMOUSLY' }
     # - { path: ^/profile, roles: ROLE_USER }
     # - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 

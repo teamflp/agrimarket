@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\ApiResource\State\UserStateProcessor;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -31,7 +32,8 @@ use Symfony\Component\Serializer\Attribute\Groups;
     ],
     normalizationContext: ['groups' => ['user:read']],
     denormalizationContext: ['groups' => ['user:write']],
-    paginationItemsPerPage: 10,
+    paginationItemsPerPage: 10, // Utilisation du UserStateProcessor
+    processor: UserStateProcessor::class,
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
