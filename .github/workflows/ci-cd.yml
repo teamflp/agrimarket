@@ -3,13 +3,13 @@ name: Agrimarket CI/CD
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - 'agrimarket/**'
 
   pull_request:
     branches:
-      - main
+      - master
     paths:
       - 'agrimarket/**'
 
