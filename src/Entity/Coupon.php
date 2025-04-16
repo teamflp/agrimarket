@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Post;
+use App\ApiResource\State\CouponStateProcessor;
 use Doctrine\DBAL\Types\Types;
 use ApiPlatform\Metadata\Delete;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,16 +17,17 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CouponRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['coupon:read']],
-    denormalizationContext: ['groups' => ['coupon:write']],
-    operations:[
+    operations: [
         new GetCollection(),
         new Get(),
         new POST(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
-        new Put(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"), 
-        new Delete(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"), 
-        
-    ]
+        new Put(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
+        new Delete(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
+
+    ],
+    normalizationContext: ['groups' => ['coupon:read']],
+    denormalizationContext: ['groups' => ['coupon:write']],
+    processor: CouponStateProcessor::class
 )]
 class Coupon
 {

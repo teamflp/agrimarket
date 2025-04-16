@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Delete;
+use App\ApiResource\State\AddressStateProcessor;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\AddressRepository;
@@ -21,13 +22,14 @@ use Symfony\Component\Validator\Constraints\Regex;
     operations: [
         new GetCollection(),
         new Get(),
-        new POST(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
-        new Put(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER'))"),
-        new Delete(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER'))"),
+        new Post(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
+        new Put(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
+        new Delete(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_FARMER')"),
     ],
     normalizationContext: ['groups' => ['address:read']],
     denormalizationContext: ['groups' => ['address:write']],
     paginationItemsPerPage: 10,
+    processor: AddressStateProcessor::class
 )]
 #[ApiFilter(SearchFilter::class, properties: ['city' => 'partial', 'zipCode' => 'partial'])]
 class Address

@@ -48,7 +48,7 @@ class OrderItem
 
     // On peut stocker le prix unitaire au moment de la commande
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
-    #[Groups(['order_item:read', 'order_item:write'])]
+    #[Groups(['order_item:read', 'internal:write'])]
     private ?string $unitPrice = null;
 
     public function getId(): ?int
@@ -77,8 +77,13 @@ class OrderItem
     {
         $this->product = $product;
 
+        if ($product !== null) {
+            $this->setUnitPrice($product->getPrice());
+        }
+
         return $this;
     }
+
 
     public function getQuantity(): ?int
     {

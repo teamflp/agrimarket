@@ -27,8 +27,6 @@ use Symfony\Component\Serializer\Attribute\Groups;
     normalizationContext: ['groups' => ['category:read']],
     denormalizationContext: ['groups' => ['category:write']]
 )]
-    
-    //  On ajoute cette annotation pour exposer l'entité en tant que ressource API
 class Category
 {
     #[ORM\Id]
